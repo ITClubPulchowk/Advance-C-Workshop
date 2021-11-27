@@ -35,12 +35,8 @@ int main(int argc, char *argv[]){
         char op = buffer[ptr];
         while(start < ptr){
             float a = 0;
-            int str = start;
-            int end = start;
-            for (; buffer[end] >= '0' && buffer[end] <= '9'; end ++);
-            start = end;
-            for (; str < end; str ++)
-                a = a * 10 + buffer[str] - '0';
+            for (; buffer[start] >= '0' && buffer[start] <= '9'; start ++)
+                a = a * 10 + buffer[start] - '0';
             if (a){
                 switch(op){
                     case '+':
