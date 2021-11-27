@@ -93,7 +93,7 @@ void read_file()
 
     fread(buffer, 1, buffer_size + 2, ptr);
     buffer[buffer_size] = '\0';
-    printf("%d\n%s\n", buffer_size, buffer);
+    
     for (int i = 0; i < buffer_size; i++)
     {
         if (buffer[i] == 'c')
@@ -104,7 +104,7 @@ void read_file()
             {
                 if (buffer[i + j] == ' ' || buffer[i + j] == '\n'|| buffer[i + j] == '\0')
                 {
-                    printf("%d ", sum);
+                    
                     golo[k] = sum;
                     sum = 0;
                     if(buffer[i+j]=='\0')
@@ -129,7 +129,7 @@ void read_file()
             {
                 if (buffer[i + j] == ' ' || buffer[i + j] == '\0' || buffer[i + j] == '\n' )
                 {
-                    printf("%d ", sum);
+                    
                     charkune[k] = sum;
                     sum = 0;
                     if(buffer[i+j]=='\0')
