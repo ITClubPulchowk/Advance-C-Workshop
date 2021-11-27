@@ -20,15 +20,16 @@ int main(int argc, char *argv[]){
     int r, g, b;
 
     int img_width, img_height;
-    fscanf(inp_file, "%d %d", &img_width, &img_height);
+    fscanf(inp_file, "%d%d", &img_width, &img_height);
     int img_area = img_height * img_width;
 
     unsigned char *colors = malloc(sizeof(*colors) * img_area * 3);
 
     while (!feof(inp_file)){
-        char type = fgetc(inp_file);
+        char type;
+        while ((type = fgetc(inp_file)) != 'c' || type != 'r');
         if (type == 'c'){
-            fscanf(inp_file, "%d %d %d %d %d %d", &center_x, &center_y, &radius, &r, &g, &b);
+            fscanf(inp_file, "%d%d%d%d%d%d", &center_x, &center_y, &radius, &r, &g, &b);
             int minm = max(center_y - radius, 0);
             int maxm = min(center_y + radius, img_height);
             for(int y = minm; y < maxm; y ++){
@@ -45,7 +46,7 @@ int main(int argc, char *argv[]){
                 }
             }
         } else if (type == 'r') {
-            fscanf(inp_file, "%d %d %d %d %d %d %d", &center_x, &center_y, &width, &height, &r, &g, &b);
+            fscanf(inp_file, "%d%d%d%d%d%d%d", &center_x, &center_y, &width, &height, &r, &g, &b);
             int maxm = min(center_y + height, img_height);
             for(int y = center_y; y < maxm; y ++){
                 int pos = y * img_width + center_x;

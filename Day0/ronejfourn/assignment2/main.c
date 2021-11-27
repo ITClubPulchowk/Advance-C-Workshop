@@ -17,59 +17,53 @@ int main(int argc, char *argv[]){
     fclose(inp_file);
 
     FILE *out_file = fopen("results.txt", "wb");
-    char newline = 1;
-    int pos = 0;
-    float a = 0, b = 0;
-    while (pos < size){
-        switch(buffer[pos]){
-            case '+':{
-                a += b;
-            }break;
-            case '-':{
-                a -= b;
-            }break;
-            case '*':{
-                a *= b;
-            }break;
-            case '/':{
-                a /= b;
-            }break;
-            case '\n':{
-                fprintf(out_file, "%f\n", a);
-                newline = 1;
-            }break;
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                if (newline){
-                    newline = 0;
-                    a = 0;
-                    int start = pos;
-                    int end = pos;
-                    for (; buffer[end] >= '0' && buffer[end] <= '9'; end ++);
-                    pos = end;
-                    for (; start < end; start ++)
-                        a = a * 10 + buffer[start] - '0';
-                } else {
-                    b = 0;
-                    int start = pos;
-                    int end = pos;
-                    for (; buffer[end] >= '0' && buffer[end] <= '9'; end ++);
-                    pos = end;
-                    for (; start < end; start ++)
-                        b = b * 10 + buffer[start] - '0';
-                }
-                break;
-            default:break;
+
+    int start = 0, pos = 0;
+    float total = 0;
+
+    while (start < size){
+        int ptr = start;
+        while (buffer[ptr] && buffer[ptr] != '+' && buffer[ptr] != '-' && buffer[ptr] != '*' && buffer[ptr] != '/'){
+            if (buffer[ptr] == '\n'){
+                start = ptr;
+                fprintf(out_file, "%f\n", total);
+                total = 0;
+            }
+            ptr ++;
         }
-        pos ++;
+        if (!buffer[ptr]) break;
+        char op = buffer[ptr];
+        while(start < ptr){
+            float a = 0;
+            int str = start;
+            int end = start;
+            for (; buffer[end] >= '0' && buffer[end] <= '9'; end ++);
+            start = end;
+            for (; str < end; str ++)
+                a = a * 10 + buffer[str] - '0';
+            if (a){
+                switch(op){
+                    case '+':
+                        total += a;
+                        break;
+                    case '-':
+                        total -= a;
+                        break;
+                    case '*':
+                        total *= a;
+                        break;
+                    case '/':
+                        total /= a;
+                        break;
+                    default: break;
+
+                }
+                printf("%c   %f   %f\n", op, a, total);
+            }
+            while(isspace(buffer[start])) start ++;
+        }
+        start = ptr + 1;
     }
+
     fclose(out_file);
 }
