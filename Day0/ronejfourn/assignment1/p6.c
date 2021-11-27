@@ -25,9 +25,9 @@ int main(int argc, char *argv[]){
 
     unsigned char *colors = malloc(sizeof(*colors) * img_area * 3);
 
-    while (!feof(inp_file)){
-        char type;
-        while ((type = fgetc(inp_file)) != 'c' || type != 'r');
+    char type = 1;
+    while(type > 0){
+        type = fgetc(inp_file);
         if (type == 'c'){
             fscanf(inp_file, "%d%d%d%d%d%d", &center_x, &center_y, &radius, &r, &g, &b);
             int minm = max(center_y - radius, 0);

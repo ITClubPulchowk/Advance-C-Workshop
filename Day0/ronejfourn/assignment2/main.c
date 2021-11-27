@@ -58,7 +58,6 @@ int main(int argc, char *argv[]){
                     default: break;
 
                 }
-                printf("%c   %f   %f\n", op, a, total);
             }
             while(isspace(buffer[start])) start ++;
         }
