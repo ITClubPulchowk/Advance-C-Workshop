@@ -57,7 +57,7 @@ dkms.conf
 # Local History for Visual Studio Code
 .history/
 
-# Resources
-*.txt
+#others
 *.ppm
-!readme.txt
+*.txt
+Advance-C-Workshop.iml
