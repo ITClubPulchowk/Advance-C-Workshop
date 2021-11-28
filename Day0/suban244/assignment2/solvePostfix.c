@@ -144,7 +144,7 @@ float solve(char *expression) {
 int main() {
   int choice = 1;
   if (choice == 1) {
-    FILE *input = fopen("expressions.txt", "r");
+    FILE *input = fopen("expressions.txt", "rb");
     FILE *output = fopen("results.txt", "w");
     char expression[INPUT_SIZE];
     float value = 0;

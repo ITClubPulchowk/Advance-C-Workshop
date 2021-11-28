@@ -82,7 +82,7 @@ int main() {
   char character;
   struct Pixel *pixels;
 
-  FILE *input = fopen("render.txt", "r");
+  FILE *input = fopen("render.txt", "rb");
   FILE *output = fopen("output.ppm", "w");
 
   if (input == NULL) {
