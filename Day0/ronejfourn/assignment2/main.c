@@ -79,6 +79,7 @@ int main(int argc, char *argv[]){
                 unsigned int a = 0;
                 for (; buffer[pos] >= '0' && buffer[pos] <= '9'; pos ++)
                     a = a * 10 + buffer[pos] - '0';
+                pos --;
                 push(&stack, a);
             } break;
             default: break;
