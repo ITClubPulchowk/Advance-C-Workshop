@@ -31,7 +31,7 @@ int checkIfSymbol(char a) {
   return 0;
 }
 
-// IDK I think this works
+// IDK if this works
 float recursiveSolver(char **tokens, int tokenCount, int *depth) {
   int offset = 1;
   int functionDepth = 0;

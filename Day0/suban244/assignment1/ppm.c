@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 struct Pixel {
-  short r, g, b;
+  unsigned char r, g, b;
 };
 
 void writeCircle(FILE *input, FILE *output, struct Pixel *pixels,
@@ -11,9 +11,13 @@ void writeCircle(FILE *input, FILE *output, struct Pixel *pixels,
   struct Pixel p;
   int centerX, centerY, radius;
   int loopStartW, loopStartH, loopEndW, loopEndH;
+  short r, g, b;
 
-  fscanf(input, "%d %d %d %hu %hu %hu\n", &centerX, &centerY, &radius, &p.r,
-         &p.g, &p.b);
+  fscanf(input, "%d %d %d %hu %hu %hu\n", &centerX, &centerY, &radius, &r, &g,
+         &b);
+  p.r = r;
+  p.g = g;
+  p.b = b;
   printf("%hu %hu %hu", p.r, p.g, p.b);
 
   // Capping the for loops
@@ -39,16 +43,20 @@ void writeRect(FILE *input, FILE *output, struct Pixel *pixels, int imageWidth,
   struct Pixel p;
   int centerX, centerY, width, height;
   int loopStartW, loopStartH, loopEndW, loopEndH;
+  short r, g, b;
   fscanf(input, "%d %d %d %d %hu %hu %hu\n", &centerX, &centerY, &width,
-         &height, &p.r, &p.g, &p.b);
-
+         &height, &r, &g, &b);
+  p.r = r;
+  p.g = g;
+  p.b = b;
   printf("%hu %hu %hu", p.r, p.g, p.b);
   // Capping the for loops
-  loopStartW = (centerX - width < 0) ? 0 : centerX - width;
-  loopStartH = (centerY - height < 0) ? 0 : centerY - height;
-  loopEndW = (centerX + width - 1 < imageWidth) ? centerX + width : imageWidth;
-  loopEndH =
-      (centerY + height - 1 < imageHeight) ? centerY + height : imageHeight;
+  loopStartW = (centerX - width / 2 < 0) ? 0 : centerX - width / 2;
+  loopStartH = (centerY - height / 2 < 0) ? 0 : centerY - height / 2;
+  loopEndW =
+      (centerX + width / 2 - 1 < imageWidth) ? centerX + width / 2 : imageWidth;
+  loopEndH = (centerY + height / 2 - 1 < imageHeight) ? centerY + height / 2
+                                                      : imageHeight;
 
   for (int w = loopStartW; w < loopEndW; w++) {
     for (int h = loopStartH; h < loopEndH; h++) {
