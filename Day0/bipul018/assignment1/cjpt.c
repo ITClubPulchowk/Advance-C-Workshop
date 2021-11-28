@@ -11,17 +11,15 @@ struct color{
 int main(int argc,char *argv[])
 {
 
-    //If passing the file name as command line argument no need to input these here:
-    printf("Enter the name of source file : ");
+    //default filenames will be used if not provided in command line
     char source[100];
     if(argc>1)
     {
         strcpy(source,argv[1]);
-        printf("%s\n",source);
     }
     else
     {
-        scanf("%s",source);
+        strcpy(source,"render.txt");
     }
     FILE *fp;
     fp=fopen(source,"r");
@@ -30,16 +28,15 @@ int main(int argc,char *argv[])
         printf("File not found\n");
         return 0;
     }
-    printf("Enter the name of destination file : ");
+    
     char destination[100];
     if(argc>2)
     {
         strcpy(destination,argv[2]);
-        printf("%s\n",destination);
     }
     else
     {
-        scanf("%s",destination);
+        strcpy(destination,"output.ppm");
     }
     FILE *fp1;
     fp1=fopen(destination,"w");
