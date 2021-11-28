@@ -16,7 +16,7 @@
     https://www.includehelp.com/c/evaluation-of-postfix-expressions-using-stack-with-c-program.aspx
 
     Major limitations:
-    1.  It can evaluate only single character operands.
+    1.  It can't evaluate negative operands.
     2.  It can evaluate only the 4 basic operators: +, -, *, /
 */
 
@@ -30,7 +30,7 @@
 float eval_postfix(char *exp)
 {
     // Create a stack of size excluding whitespaces from the expression for storing operands
-    float *stack = (float *)malloc(strlen(exp) / 2 * sizeof(float));
+    float *stack = (float *)calloc(strlen(exp) / 2, sizeof(float));
 
     int top_idx = -1;
 
@@ -71,7 +71,15 @@ float eval_postfix(char *exp)
         else if (ch > 47 && ch < 58) // ASCII code of '0' to '9'
         {
             // isdigit
-            stack[++top_idx] = ch - '0'; // Conversion of character digit to corresponding integer
+
+            if (exp[i - 1] == 32 || i == 0)
+            {
+                // Previous character is a whitespace or first character
+                top_idx++;
+            }
+
+            // Conversion of string integer to corresponding integer
+            stack[top_idx] = stack[top_idx] * 10 + ch - '0';
         }
     }
 
@@ -81,8 +89,8 @@ float eval_postfix(char *exp)
 
 int main()
 {
-    FILE *fp_input = fopen(INPUT_FILENAME, "r");
-    FILE *fp_output = fopen(OUTPUT_FILENAME, "w");
+    FILE *fp_input = fopen(INPUT_FILENAME, "rb");
+    FILE *fp_output = fopen(OUTPUT_FILENAME, "wb");
 
     if (fp_input == NULL)
     {
