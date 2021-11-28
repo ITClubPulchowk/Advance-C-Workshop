@@ -81,8 +81,8 @@ float eval_postfix(char *exp)
 
 int main()
 {
-    FILE *fp_input = fopen(INPUT_FILENAME, "r");
-    FILE *fp_output = fopen(OUTPUT_FILENAME, "w");
+    FILE *fp_input = fopen(INPUT_FILENAME, "rb");
+    FILE *fp_output = fopen(OUTPUT_FILENAME, "wb");
 
     if (fp_input == NULL)
     {
