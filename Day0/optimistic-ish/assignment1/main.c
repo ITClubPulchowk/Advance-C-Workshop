@@ -1,14 +1,13 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
-int width,
-height,
-channel = 3;
+int width = 800,
+    height = 800,
+    channel = 3;
 
-unsigned char* img;
+unsigned char *img;
 typedef struct color
 {
     unsigned char r;
@@ -85,52 +84,53 @@ void initialize()
 void read_file()
 {
     int golo[6], charkune[7];
-    FILE* ptr = fopen("render.txt", "rb");
+    FILE *ptr = fopen("render.txt", "rb");
     fseek(ptr, 0, SEEK_END);
     long buffer_size = ftell(ptr);
     fseek(ptr, 0, SEEK_SET);
 
-    unsigned char* buffer = malloc(buffer_size + 1);
+    unsigned char *buffer = malloc(buffer_size + 1);
 
     fread(buffer, 1, buffer_size, ptr);
     buffer[buffer_size] = '\0';
-    {int temp = 0, index = 0, inner = 0, size[2];
-    while (1)
+    
+    {int temp=0,index=0,inner=0,size[2];
+    while(1)
     {
-        if (buffer[index] == ' ' || buffer[index] == '\n')
+        if(buffer[index]==' ' || buffer[index]=='\n')
         {
-            size[inner] = temp;
-            printf("%d ", temp);
-            temp = 0;
-            if (buffer[index] == '\n')
+            size[inner]=temp;
+            
+            temp=0;
+            if(buffer[index]=='\n')
                 break;
-            index++; inner++;
+            index++;inner++;
             continue;
         }
-        temp = temp * 10 + (buffer[index] - '0');
+        temp=temp*10+(buffer[index]-'0');
         index++;
     }
-    width = size[0];
-    height = size[1];
+    width=size[0];
+    height=size[1];
     }
     initialize();
     for (int i = 0; i < buffer_size; i++)
-    {
+    {        
         if (buffer[i] == 'c')
         {
             int k = 0, j = 2;
             int sum = 0;
-            while (buffer[i + j] != 'c' && buffer[i + j] != 'r')
+            while (buffer[i + j] != 'c' && buffer[i + j] != 'r' )
             {
-                if (buffer[i + j] == ' ' || buffer[i + j] == '\n' || buffer[i + j] == '\0')
+                if (buffer[i + j] == ' ' || buffer[i + j] == '\n'|| buffer[i + j] == '\0')
                 {
-
+                    
                     golo[k] = sum;
                     sum = 0;
-                    if (buffer[i + j] == '\0')
+                    if(buffer[i+j]=='\0')
                         break;
                     k++;
-                    j++;
+                    j++;                    
                     continue;
                 }
                 sum = sum * 10 + (buffer[i + j] - '0');
@@ -138,7 +138,7 @@ void read_file()
             }
             j = 2;
             k = 0;
-            pixel color = { golo[3], golo[4], golo[5] };
+            pixel color = {golo[3], golo[4], golo[5]};
             circle(golo[0], golo[1], golo[2], color);
         }
         if (buffer[i] == 'r')
@@ -147,15 +147,15 @@ void read_file()
             int sum = 0;
             while (buffer[i + j] != 'c' && buffer[i + j] != 'r')
             {
-                if (buffer[i + j] == ' ' || buffer[i + j] == '\0' || buffer[i + j] == '\n')
+                if (buffer[i + j] == ' ' || buffer[i + j] == '\0' || buffer[i + j] == '\n' )
                 {
-
+                    
                     charkune[k] = sum;
                     sum = 0;
-                    if (buffer[i + j] == '\0')
+                    if(buffer[i+j]=='\0')
                         break;
                     k++;
-                    j++;
+                    j++;                    
                     continue;
                 }
                 sum = sum * 10 + (buffer[i + j] - '0');
@@ -163,16 +163,16 @@ void read_file()
             }
             j = 2;
             k = 0;
-            pixel color = { charkune[4], charkune[5], charkune[6] };
+            pixel color = {charkune[4], charkune[5], charkune[6]};
             rectangle(charkune[0], charkune[1], charkune[2], charkune[3], color);
         }
     }
 }
 
 int main()
-{
+{    
     read_file();
-    FILE* ptr = fopen("ouput.ppm", "w+");
+    FILE *ptr = fopen("ouput.ppm", "w+");
     fprintf(ptr, "P3\n%d %d\n255\n", width, height);
     for (int i = 0; i < width * height * channel; i++)
         fprintf(ptr, "%d ", img[i]);
