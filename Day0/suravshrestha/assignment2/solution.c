@@ -72,9 +72,11 @@ float eval_postfix(char *exp)
         {
             // isdigit
 
-            if (exp[i - 1] == 32 || i == 0)
+            char prev_char = exp[i - 1];
+            if (prev_char == 32 || i == 0 ||
+                prev_char == '+' || prev_char == '-' || prev_char == '*' || prev_char == '/')
             {
-                // Previous character is a whitespace or first character
+                // Previous character is a whitespace or first character or operator
                 top_idx++;
             }
 
