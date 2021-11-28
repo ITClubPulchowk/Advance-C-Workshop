@@ -34,9 +34,9 @@ void DrawRect(char* data, Pair* pixelsPos, Color* pixelsColor, int pixelCount, i
     }
     for (int i = values[Recty]; i < min(values[Recty] + values[h], imageSize[1]); i++) {
         for (int j = values[Rectx]; j < min(values[Rectx] + values[w], imageSize[0]); j++) {
-            pixelsColor[i * 800 + j].r = values[Rectr];
-            pixelsColor[i * 800 + j].g = values[Rectg];
-            pixelsColor[i * 800 + j].b = values[Rectb];
+            pixelsColor[i * imageSize[1] + j].r = values[Rectr];
+            pixelsColor[i * imageSize[1] + j].g = values[Rectg];
+            pixelsColor[i * imageSize[1] + j].b = values[Rectb];
         }
     }
 }
@@ -54,12 +54,12 @@ void DrawCircle(char* data, Pair* pixelsPos, Color* pixelsColor, int pixelCount,
     }
     for (int i = max(values[Circley] - values[rad], 0); i < min(values[Circley] + values[rad], imageSize[1]); i++) {
         for (int j = max(values[Circlex] - values[rad], 0); j < min(values[Circlex] + values[rad], imageSize[0]); j++) {
-            if (((pixelsPos[i*800 + j].x - values[Circlex]) * (pixelsPos[i*800 + j].x - values[Circlex]))
-                + ((pixelsPos[i*800 + j].y - values[Circley]) * (pixelsPos[i*800 + j].y - values[Circley]))
+            if (((pixelsPos[i*imageSize[1] + j].x - values[Circlex]) * (pixelsPos[i*imageSize[1] + j].x - values[Circlex]))
+                + ((pixelsPos[i*imageSize[1] + j].y - values[Circley]) * (pixelsPos[i*imageSize[1] + j].y - values[Circley]))
                 <= values[rad] * values[rad]) {
-                pixelsColor[i*800 + j].r = values[Circler];
-                pixelsColor[i*800 + j].g = values[Circleg];
-                pixelsColor[i*800 + j].b = values[Circleb];
+                pixelsColor[i*imageSize[1] + j].r = values[Circler];
+                pixelsColor[i*imageSize[1] + j].g = values[Circleg];
+                pixelsColor[i*imageSize[1] + j].b = values[Circleb];
             }
         }
     }
