@@ -4,7 +4,7 @@
 
 #define SQUARE(anything) (anything*anything)
 #define renderfile "render.txt"
-#define resultfile "test.ppm"
+#define resultfile "output.ppm"
 
 #define circlescale 5
 #define ppmscale 25
