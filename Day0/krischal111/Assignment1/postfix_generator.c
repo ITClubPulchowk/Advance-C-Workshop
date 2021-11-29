@@ -1,3 +1,5 @@
+// updated some things
+
 #include <stdio.h>
 #include <stdlib.h>
 

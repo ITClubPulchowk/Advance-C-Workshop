@@ -44,61 +44,61 @@ char getoperator(FILE* myfile)
 
 int main()
 {
-    FILE * myfile = fopen(expressionfile, "r");
+    FILE * myfile = fopen(expressionfile, "rb");
     if(myfile)
     {
-	FILE * resfile = fopen(resultfile, "w");
-	fclose(resfile);
-	
-	while( 1 )
-	{  
-	    char c = fgetc(myfile);
-	    fseek(myfile, -1, 1);
-	    
-	    if(c == EOF)
-	        break;
-	
-	    float a = getnum(myfile);
-	    while(c != '\n' && c != EOF)
-	    {
-	        int b = getnum(myfile);
-	        
-	        switch(getoperator(myfile))
-	        {
-	            case '*':
-	            a *= b;
-	            break;
-	            
-	            case '/':
-	            a /= b;
-	            break;
-	            
-	            case '+':
-	            a += b;
-	            break;
-	            
-	            case '-':
-	            a -= b;
-	            break;
-	            
-	            default:
-	            break;
-	        }
-	        
-	       c = fgetc(myfile);
-	       fseek(myfile, -1, 1);
-	    }
-	    
-	    FILE * resfile = fopen(resultfile, "a");
-	    fprintf(resfile, "%f\n",a);
-	    printf("%f\n",a);
-	    fclose(resfile);
+		FILE * resfile = fopen(resultfile, "wb");
+		fclose(resfile);
+		
+		while( 1 )
+		{  
+			char c = fgetc(myfile);
+			fseek(myfile, -1, 1);
+			
+			if(c == EOF)
+				break;
+		
+			float a = getnum(myfile);
+			while(c != '\n' && c != EOF)
+			{
+				int b = getnum(myfile);
+				
+				switch(getoperator(myfile))
+				{
+					case '*':
+					a *= b;
+					break;
+					
+					case '/':
+					a /= b;
+					break;
+					
+					case '+':
+					a += b;
+					break;
+					
+					case '-':
+					a -= b;
+					break;
+					
+					default:
+					break;
+				}
+				
+			c = fgetc(myfile);
+			fseek(myfile, -1, 1);
+			}
+			
+			FILE * resfile = fopen(resultfile, "ab");
+			fprintf(resfile, "%f\n",a);
+			printf("%f\n",a);
+			fclose(resfile);
 
-      	    if(c == EOF)
-	        break;
+				if(c == EOF)
+				break;
 
-            fgetc(myfile);
-	}
+				fgetc(myfile);
+		}
     }
     fclose(myfile);
 }

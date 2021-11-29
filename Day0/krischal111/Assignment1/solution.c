@@ -153,26 +153,26 @@ void makecircle(void * image_data, struct coordinate image_size, struct circle c
 
 void showppm(void * image_data, struct coordinate image_size)
 {
-        for(int y = 0; y< image_size.y; y++)
+    for(int y = 0; y< image_size.y; y++)
+    {
+        if(y % ppmscale == 0)
+            printf("\n");
+        for(int x = 0; x < image_size.x; x++)
         {
-            if(y % ppmscale == 0)
-                printf("\n");
-            for(int x = 0; x < image_size.x; x++)
+            struct pixel p = *( (struct pixel *) image_data + x + y * (image_size.x));
+            if(x % ppmscale == 0 && y % ppmscale == 0)
             {
-                struct pixel p = *( (struct pixel *) image_data + x + y * (image_size.x));
-                if(x % ppmscale == 0 && y % ppmscale == 0)
-                {
-                    int totalcolor = p.r + p.g + p.b;
-                    if( (totalcolor) )
-                        printf("##");
-                    else {
-                        printf("  ");
-                    }
+                int totalcolor = p.r + p.g + p.b;
+                if( (totalcolor) )
+                    printf("##");
+                else {
+                    printf("  ");
                 }
             }
         }
+    }
 
-        return;
+    return;
 }
 
 void makeppm(char * filename, void * image_data, struct coordinate image_size, size_t sizeof_image_data)
@@ -188,7 +188,7 @@ void makeppm(char * filename, void * image_data, struct coordinate image_size, s
         printf("%15s",initial_text);
         showppm(image_data, image_size);
     }
-    FILE * myfile = fopen(filename, "w");
+    FILE * myfile = fopen(filename, "wb");
 
     fprintf(myfile, "%s",initial_text);
      // fwrite(initial_text, 15, 1, myfile); // for binary mode
