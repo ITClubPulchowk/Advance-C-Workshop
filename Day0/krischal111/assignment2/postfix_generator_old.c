@@ -1,5 +1,3 @@
-// updated some things
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,16 +37,6 @@ int main(int argc, char** argv)
 				fprintf(file, "%c\n", generate_operator());
 			}
 			fclose(file);
-			
-                        FILE* file = fopen("expressions.txt", "r");
-                        system("clear");
-                        char c = fgetc(file);
-                        while(c != EOF)
-                        {
-                            printf("%c",c);
-                            c = fgetc(file);
-                        }
-                        fclose(file);
 		}
 	}
 }
