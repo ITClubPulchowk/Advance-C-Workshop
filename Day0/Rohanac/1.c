@@ -97,8 +97,9 @@ int main()
             unsigned char ar=(pixel_data[j*img_width+i]>>(8*3)) & 0xff;
             unsigned char ag=(pixel_data[j*img_width+i]>>(8*2)) & 0xff;
             unsigned char ab=(pixel_data[j*img_width+i]>>(8*1)) & 0xff;
-            fprintf(fp,"%c%c%c",ar,ag,ab);
-
+            fwrite(&ar,sizeof(ar),1,fp);
+            fwrite(&ag,sizeof(ag),1,fp);
+            fwrite(&ab,sizeof(ab),1,fp);
         }
     }
     fclose(fp);
