@@ -9,7 +9,6 @@ r center_x center_y width height r g b
     magic number (p3 or p6) image_width  image_height max_value_of_color_components
     image data
 */
-//TODO: SHIFT THE RGB ORDER
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
