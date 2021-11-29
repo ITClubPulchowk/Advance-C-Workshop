@@ -60,4 +60,7 @@ dkms.conf
 #others
 *.ppm
 *.txt
+!/resources/Lecture\ 0/Solutions/Assignment-1/output.ppm
+!/resources/Lecture\ 0/Solutions/Assignment-1/render.txt
+!/resources/Lecture\ 0/Solutions/Assignment-1/render\ but\ dangerous.txt
 Advance-C-Workshop.iml

@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
@@ -119,8 +118,11 @@ int main(int argc, char *argv[]){
             int minm = max(center_y - height / 2, 0);
             int maxm = min(center_y + height / 2 + 1, img_height);
             for(int y = minm; y < maxm; y ++){
-                int pos = y * img_width + center_x - width / 2;
-                int len = min(width + 1, img_width - center_x - 1);
+                int start_x = max(center_x - width / 2, 0);
+                int pos = y * img_width + start_x;
+                int len = width + 1;
+                if (!start_x) len = center_x + width / 2 + 1;
+                len = min(len, img_width - start_x);
                 pos *= 3;
                 for (int i = 0; i < len * 3; i += 3){
                     colors[pos + i] = r;
