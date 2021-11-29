@@ -50,10 +50,10 @@ int squareof(int number)
     return number*number;
 }
 
-char  writepixel(void * image_data, struct coordinate size, struct coordinate coord, struct pixel pxl)
+void  writepixel(void * image_data, struct coordinate size, struct coordinate coord, struct pixel pxl)
 {
     * (((struct pixel *) image_data) + (coord.y * size.x + coord.x ) ) = pxl;
-    return -1;
+    return;
 }
 
 struct box cut_object_box_using_image_size(struct coordinate image_size, struct box object_box)
@@ -102,6 +102,8 @@ void makerectangle(void * image_data, struct coordinate image_size, struct recta
 
     if(rectangleshow)
     printf("\n\n");
+
+    return;
 }
 
 void makecircle(void * image_data, struct coordinate image_size, struct circle circ)
@@ -145,6 +147,8 @@ void makecircle(void * image_data, struct coordinate image_size, struct circle c
     }
     if(circleshow)
         printf("\n\n");
+
+        return;
 }
 
 void showppm(void * image_data, struct coordinate image_size)
@@ -167,6 +171,8 @@ void showppm(void * image_data, struct coordinate image_size)
                 }
             }
         }
+
+        return;
 }
 
 void makeppm(char * filename, void * image_data, struct coordinate image_size, size_t sizeof_image_data)
@@ -187,6 +193,8 @@ void makeppm(char * filename, void * image_data, struct coordinate image_size, s
     fprintf(myfile, "%s",initial_text);
      // fwrite(initial_text, 15, 1, myfile); // for binary mode
     fwrite(image_data, sizeof_image_data, 1, myfile);
+
+    return;
 }
 
 
@@ -254,4 +262,6 @@ int main()
         
     }
     fclose(myfile);
+
+    return 0;
 }
