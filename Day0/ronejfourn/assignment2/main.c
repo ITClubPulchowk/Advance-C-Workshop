@@ -46,8 +46,10 @@ int main(int argc, char *argv[]){
     FILE *out_file = fopen("results.txt", "wb");
     while (pos < size){
         switch (buffer[pos]) {
+            case '\r':
             case '\n':{
-                fprintf(out_file, "%f\n", stack.stack[0]);
+                if (stack.ptr != -1)
+                    fprintf(out_file, "%f\n", stack.stack[0]);
                 stack.ptr = -1;
             } break;
             case '+':{
