@@ -1,3 +1,7 @@
+# Project File
+.vs/
+*.sln
+
 # Prerequisites
 *.d
 
