@@ -180,7 +180,7 @@ void makeppm(char * filename, void * image_data, struct coordinate image_size, s
 
     char initial_text[30];
     sprintf(initial_text,
-           "P6\n"
+            "P6\n"
             "%d %d\n"
             "255\n%c", image_size.x, image_size.y, '\0');
     if(ppmshow)
