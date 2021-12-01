@@ -9,6 +9,10 @@ int main()
     float a = 0, b = 0, result = 0, c = 0;
     char operator= '0';
     fp = fopen("expressions.txt", "rb");
+    if(!fP)
+    {printf("no file");
+     return 1;
+    }
     fseek(fp, 0L, SEEK_END);
     file_size = ftell(fp);
     fseek(fp, 0L, SEEK_SET);
