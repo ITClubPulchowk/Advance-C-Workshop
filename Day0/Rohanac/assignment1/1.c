@@ -30,6 +30,11 @@ int main()
     int img_height, img_width;
     bool shape_change = true;
     fp = fopen("render.txt", "rb");
+    if(!fp)
+    {
+        printf("No file");
+        return 1;
+    }
     fseek(fp, 0L, SEEK_END);
     file_size = ftell(fp);
     fseek(fp, 0L, SEEK_SET);
