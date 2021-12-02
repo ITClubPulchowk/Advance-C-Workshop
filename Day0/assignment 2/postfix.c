@@ -12,12 +12,12 @@ char* digit_extracter(char* p)
 		float digit = 0;
 		while (1)
 		{
-			if (*p == ' ')
+			if (!(*p >= '0' && *p <= '9'))
 			{
 				num[stack_tracker] = digit;
 				//printf("%f\n", digit);
 				stack_tracker++;
-				digit=0;
+				digit = 0;
 				return p;
 			}
 			digit = digit * 10 + ((*p) - '0');
@@ -79,7 +79,7 @@ char* calculator(char* p)
 }
 void work(char* buffer)
 {
-    FILE *ptr=fopen("results.txt","a+");
+	FILE* ptr = fopen("results.txt", "a+");
 	char* pointer = buffer;
 	while (1)
 	{
@@ -101,17 +101,17 @@ void work(char* buffer)
 		if (*pointer == '\n')
 		{
 			printf("%f\n", num[stack_tracker - 1]);
-            fprintf(ptr,"%f\n", num[stack_tracker - 1]);
+			fprintf(ptr, "%f\n", num[stack_tracker - 1]);
 			pointer++;
-			for(int i=0;i<10;i++)
-				num[i]=0;
+			for (int i = 0; i < 10; i++)
+				num[i] = 0;
 			stack_tracker = 0;
 
 		}
 		if (*pointer == '\0')
 		{
 			printf("%f\n", num[stack_tracker - 1]);
-            fprintf(ptr,"%f\n", num[stack_tracker - 1]);
+			fprintf(ptr, "%f\n", num[stack_tracker - 1]);
 			break;
 		}
 		pointer++;
@@ -128,11 +128,11 @@ void read_file()
 	fread(buffer, 1, buffer_size + 1, ptr);
 	buffer[buffer_size] = '\0';
 	if (buffer == NULL)
-		exit(1);	
+		exit(1);
 	work(buffer);
 }
 
 void main()
 {
-	read_file();	
+	read_file();
 }
