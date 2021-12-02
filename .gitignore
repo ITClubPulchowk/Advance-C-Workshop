@@ -1,3 +1,7 @@
+# Project File
+.vs/
+*.sln
+
 # Prerequisites
 *.d
 
@@ -56,3 +60,5 @@ dkms.conf
 
 # Local History for Visual Studio Code
 .history/
+
+Advance-C-Workshop.iml
