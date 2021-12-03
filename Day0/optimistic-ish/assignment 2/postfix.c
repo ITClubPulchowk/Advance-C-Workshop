@@ -6,7 +6,6 @@ double num[10];
 int stack_tracker = 0;
 char* digit_extracter(char* p)
 {
-
 	if (*p >= '0' && *p <= '9')
 	{
 		float digit = 0;
@@ -24,6 +23,7 @@ char* digit_extracter(char* p)
 			p++;
 		}
 	}
+	return p;
 }
 char* skip_white_spaces(char* p)
 {
@@ -34,6 +34,7 @@ char* skip_white_spaces(char* p)
 		else
 			return p;
 	}
+	return p;
 }
 char* calculator(char* p)
 {
@@ -76,6 +77,7 @@ char* calculator(char* p)
 		p++;
 		return p;
 	}
+	return p;
 }
 void work(char* buffer)
 {
@@ -106,6 +108,7 @@ void work(char* buffer)
 			for (int i = 0; i < 10; i++)
 				num[i] = 0;
 			stack_tracker = 0;
+			continue;
 
 		}
 		if (*pointer == '\0')
