@@ -152,7 +152,7 @@ node *make_tree(char **data, stack *b_stack) {
 }
 
 int main() {
-    FILE *inp_file = fopen("expressions.txt", "rb");
+    FILE *inp_file = fopen("infix_input.txt", "rb");
     if (!inp_file) {
         printf("What file?\n");
         return -2;
@@ -161,7 +161,7 @@ int main() {
     int size = ftell(inp_file);
     rewind(inp_file);
 
-    char *data = malloc(size + 2);
+    char *data = malloc(size + 1);
     fread(data, 1, size, inp_file);
     data[size] = 0;
     fclose(inp_file);
@@ -169,7 +169,7 @@ int main() {
     stack bracket_stack;
     init_stack(&bracket_stack);
 
-    FILE *out_file = fopen("output.txt", "wb");
+    FILE *out_file = fopen("infix_output.txt", "wb");
     while (*data) {
         node *head = make_tree(&data, &bracket_stack);
         solve(head);
