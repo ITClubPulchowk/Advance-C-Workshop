@@ -13,8 +13,7 @@ char* digit_extracter(char* p)
 		{
 			if (!(*p >= '0' && *p <= '9'))
 			{
-				num[stack_tracker] = digit;
-				//printf("%f\n", digit);
+				num[stack_tracker] = digit;				
 				stack_tracker++;
 				digit = 0;
 				return p;
@@ -45,30 +44,26 @@ char* calculator(char* p)
 		case '+':
 		{
 			num[stack_tracker - 2] = num[stack_tracker - 2] + num[stack_tracker - 1];
-			stack_tracker--;
-			//printf("%f\n", num[stack_tracker - 1]);
+			stack_tracker--;			
 			break;
 		}
 
 		case '-':
 		{
 			num[stack_tracker - 2] = num[stack_tracker - 2] - num[stack_tracker - 1];
-			stack_tracker--;
-			//printf("%f\n", num[stack_tracker - 1]);
+			stack_tracker--;			
 			break;
 		}
 		case '*':
 		{
 			num[stack_tracker - 2] = num[stack_tracker - 2] * num[stack_tracker - 1];
-			stack_tracker--;
-			//printf("%f\n", num[stack_tracker - 1]);
+			stack_tracker--;			
 			break;
 		}
 		case '/':
 		{
 			num[stack_tracker - 2] = num[stack_tracker - 2] / num[stack_tracker - 1];
-			stack_tracker--;
-			//printf("%f\n", num[stack_tracker - 1]);
+			stack_tracker--;			
 			break;
 		}
 		default:
