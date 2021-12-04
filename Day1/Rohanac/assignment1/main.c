@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define input_file "mergesort-input.csv"
 #define output_file "mergesort-output.csv"
 void merge(int arr[], int l, int m, int r)
@@ -12,10 +13,10 @@ void merge(int arr[], int l, int m, int r)
     for (i = 0; i < n1; i++)
         L[i] = arr[l + i];
     for (j = 0; j < n2; j++)
-        R[j] = arr[m + j + 1];
+        R[j] = arr[m + j+1 ];
     i = 0;
     j = 0;
-    while (i < n1 && j < n1)
+    while (i < n1 && j < n2)
     {
         if (L[i] <= R[j])
         {
@@ -42,7 +43,9 @@ void merge(int arr[], int l, int m, int r)
         k++;
     }
     free(L);
+    L=NULL;
     free(R);
+    R=NULL;
 }
 void merge_sort(int arr[], int l, int r)
 {
@@ -57,11 +60,16 @@ void merge_sort(int arr[], int l, int r)
 int main()
 {
     FILE *fp;
-    int *arr; char *str; int file_size,array_size=1;
+    int *arr;
+    char *str;
+    int exit = 0;
+    int file_size = 0, array_size = 0, p = 0;
+    char *strtmp;
     char temp[100];
-    int i=0,j=0,k=0;
-    fp=fopen(input_file,"rb");
-    if(!fp)
+    int abs_length = 0;
+    int i = 0, j = 0, k = 0;
+    fp = fopen(input_file, "rb");
+    if (!fp)
     {
         printf("No file");
         return 1;
@@ -69,49 +77,82 @@ int main()
     fseek(fp, 0L, SEEK_END);
     file_size = ftell(fp);
     fseek(fp, 0L, SEEK_SET);
-    str=malloc(sizeof(*str)*(file_size+1));
-    fread(str,file_size,1,fp);
+    str = malloc(sizeof(*str) * (file_size + 1));
+    fread(str, file_size, 1, fp);
     fclose(fp);
-    str[file_size]=0;
-    while(str[i]!='\0')
+    strtmp = malloc(sizeof(*strtmp) * (file_size + 1));
+    str[file_size] = 0;
+    while (!exit)
     {
-        if(str[i]==',')
-        array_size++;
-        i++;
-    }
-    arr=calloc(1,sizeof(*arr)*array_size);
-    i=0;
-    while (1)
-    {
-        if(str[i]!=',' )
+        p=i;
+        while (1)
         {
-            temp[j]=str[i];
-            j++;
+            if (str[p] == ',')
+                array_size++;
+            else if (str[p] == '\n' || str[p] == '\0')
+                break;
+            p++;
         }
+        p = 0;
+        arr = malloc(sizeof(*arr) * (array_size + 1));
+        k = 0;
+        while (1)
+        {
+            if (str[i] != ','&&str[i] != '\n'&&str[i] != '\0')
+            {
+                temp[j] = str[i];
+                j++;
+            }
+            else if (str[i] == '\n')
+            {
+                temp[j] = '\0';
+                j = 0;
+                arr[k] = atoi(temp);
+                i++;
+                k++;
+                break;
+            }
+            else if (str[i] == '\0')
+            {
+                temp[j] = '\0';
+                j = 0;
+                arr[k] = atoi(temp);
+                k++;
+                exit = 1;
+                i++;
+                break;
+            }
+            else if(str[i]=='\r')
+            {}
+            else
+            {
+                temp[j] = '\0';
+                j = 0;
+                arr[k] = atoi(temp);
+                k++;
+            }
+            i++;
+        }
+
+        merge_sort(arr, 0, array_size);
+        j = k = 0;
+        abs_length += snprintf(strtmp + abs_length, file_size - abs_length, "%d", arr[0]);
+        for (k = 1; k <= array_size; k++)
+        {
+            abs_length += snprintf(strtmp + abs_length, file_size - abs_length + 1, ",%d", arr[k]);
+        }
+        j = k = 0;
+        if(!exit)
+        abs_length += snprintf(strtmp + abs_length, file_size - abs_length, "\r\n");
         else
-        {
-            temp[j]='\0';
-            j=0;
-            arr[k]=atoi(temp);
-            k++;
-        }
-        i++;
-        if(str[i]=='\0')
-        {
-        arr[k]=atoi(temp);
-        break;
-        }
-    }
+        abs_length += snprintf(strtmp + abs_length, file_size - abs_length, "\0");
 
-    merge_sort(arr,0,array_size);
-    i=j=k=0;
-
-    i += snprintf(str+i,file_size-i, "%d",arr[0]);
-    for ( k = 1; k < array_size; k++)
-    {
-        i += snprintf(str+i,file_size-i+1, ",%d",arr[k]);
+        free(arr);
+        arr=NULL;
+        array_size = 0;
+        temp[0] = '\0';
     }
-    fp=fopen(output_file,"wb");
-    fwrite(str,i,1,fp);
+    fp = fopen(output_file, "wb");
+    fwrite(strtmp, abs_length, 1, fp);
     return 0;
 }
