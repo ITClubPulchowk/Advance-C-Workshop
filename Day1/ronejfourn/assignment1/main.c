@@ -96,6 +96,7 @@ int main() {
         }
         count += *trav == ',';
     }
+    max = count > max ? count : max;
 
     int *scratch = malloc(2 * max * sizeof(int));
     int out_size = size - crlf;
