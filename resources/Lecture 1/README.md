@@ -1,4 +1,4 @@
-# Lecture 2 - DSA
+# Lecture 1 - DSA
 
 ## Syllabus:
 
