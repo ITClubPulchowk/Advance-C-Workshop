@@ -13,6 +13,9 @@ else
     fi
 fi
 
+echo Building runner
+${COMPILER} ./runner.c -o runner -O2
+
 ####################################################################################################
 
 mkdir -p debug

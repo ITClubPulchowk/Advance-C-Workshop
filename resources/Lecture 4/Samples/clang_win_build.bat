@@ -3,6 +3,7 @@
 where clang >nul 2>nul
 if %ERRORLEVEL% neq 0 goto SkipBuild
 
+echo Building runner
 clang -D_CRT_SECURE_NO_WARNINGS runner.c -O2 -o runner.exe
 
 if not exist "debug" mkdir debug
