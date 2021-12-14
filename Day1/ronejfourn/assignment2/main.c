@@ -27,10 +27,10 @@ typedef struct {
 uint32_t alder32(string string) {
     uint32_t a = 1, b = 0;
     for (int i = 0; i < string.length; i ++) {
-        a += *(string.data + i);
-        b += a;
+        a = (a + *(string.data + i)) % 65521;
+        b = (b + a) % 65521;
     }
-    return (b % 65521) * 65536 + (a % 65521);
+    return (b << 16) | a;
 }
 
 #define isnewline(ch) (!ch || ch == '\r' || ch == '\n')
