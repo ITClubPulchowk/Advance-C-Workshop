@@ -1,7 +1,9 @@
-#include "bump.h"
-#include <stdint.h>
+#include "os_virt_mem.h"
 
-bump_context bumper;
+struct {
+    void *base, *cur;
+    size_t max_size;
+} bumper;
 
 INLINE void *align_ptr(void *ptr, size_t alignment){
     uintptr_t hld = ((uintptr_t)ptr + alignment - 1) & ~(alignment - 1);
@@ -56,28 +58,3 @@ void end_bump_context() {
     bumper.base = NULL;
     bumper.cur  = NULL;
 }
-
-#if PF_LINUX
-#include <sys/mman.h>
-void *vm_alloc(size_t size) {
-    void *ret = mmap(NULL, size, PROT_WRITE | PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-    if (ret == MAP_FAILED) return NULL;
-    return ret;
-}
-
-bool vm_free(void *addr, size_t size) {
-    return munmap(addr, size) == 0;
-}
-#elif PF_WINDOWS
-#define VC_EXTRALEAN
-#include <Windows.h>
-#include <memoryapi.h>
-void *vm_alloc(size_t size) {
-    void *ret = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    return ret;
-}
-
-bool vm_free(void *addr, size_t size) {
-    return VirtualFree(addr, size, MEM_RELEASE);
-}
-#endif
