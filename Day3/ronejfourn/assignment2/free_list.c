@@ -25,14 +25,14 @@ void list_add_page(){
 
     size_t a = 0;
     while (a < list_context.list_size) {
-        list_context.list->next = top + a;
+        list_context.list->next = (void *)((char *)top + a);
         list_context.list = list_context.list->next;
         list_context.list->next = NULL;
         a += list_context.chunk_size;
     }
 }
 
-void list_context_init(size_t max_size, size_t chunk_size) {
+void init_list_context(size_t max_size, size_t chunk_size) {
     list_context.list_size  = max_size < MIN_VIRT_SIZE ? MIN_VIRT_SIZE : max_size;
     list_context.chunk_size = chunk_size < MIN_CHUNK_SIZE ? MIN_CHUNK_SIZE : chunk_size;
     list_context.map_count = 0;
@@ -58,7 +58,7 @@ void lfree(void *ptr) {
     list_context.top.next->next = tmp;
 }
 
-void list_context_end() {
+void end_list_context() {
     for (int i = 0; i < list_context.map_count; i ++)
         vm_free(list_context.map_track[i], list_context.list_size);
 }
