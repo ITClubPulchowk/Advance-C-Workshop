@@ -20,6 +20,12 @@
 #define megabytes(a) (a * 1048576)
 #define INLINE static inline
 
+#if defined(_MSC_VER)
+#define thread_local __declspec(thread)
+#else
+#define thread_local _Thread_local
+#endif
+
 #if PF_LINUX
 #include <sys/mman.h>
 INLINE void *vm_alloc(size_t size) {

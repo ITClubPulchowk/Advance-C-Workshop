@@ -1,7 +1,6 @@
 #include "os_virt_mem.h"
-#include "threading.h"
 
-struct {
+thread_local struct {
     void *base, *cur;
     size_t max_size;
 } bumper;
