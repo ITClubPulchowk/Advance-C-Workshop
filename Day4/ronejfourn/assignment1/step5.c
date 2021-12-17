@@ -1,0 +1,129 @@
+#define BMPMALLOC(size) bump(size)
+
+#include "bump.c"
+#include "bmp_lekhak.h"
+#include "threading.h"
+
+#define IM_WIDTH 800
+#define IM_HEIGHT 600
+
+#define MN_X_SCALE_MIN -2.00
+#define MN_X_SCALE_MAX 0.47
+#define MN_Y_SCALE_MIN -1.12
+#define MN_Y_SCALE_MAX 1.12
+#define MAX_ITER 1000
+
+uint32_t rgb_to_hex(uint8_t r, uint8_t g, uint8_t b) {
+    return r << 16 | g << 8 | b;
+}
+
+float map_range(float pmin, float pmax, float nmin, float nmax, float value) {
+    float ret = (value - pmin) * (nmax - nmin) / (pmax - pmin) + nmin;
+    return ret;
+}
+
+float lerp (float v0, float v1, float t) {
+    return (1 - t) * v0 + t * v1;
+}
+
+#define xxx 0
+
+uint32_t get_color(float t) {
+    uint8_t r = 0, g = 0, b = 0;
+
+    if (t >= 0.0 && t < 0.16) {
+        t = (t - 0) / (0.16 - 0);
+        r = lerp(211, 215, t);
+        g = lerp(63 , 192, t);
+        b = lerp(73 , 208, t);
+    } else if (t >= 0.16 && t < 0.42) {
+        t = (t - 0.16) / (0.42 - 0.16);
+        r = lerp(215, 239, t);
+        g = lerp(192, 240, t);
+        b = lerp(208, 209, t);
+    } else if (t >= 0.42 && t < 0.6425) {
+        t = (t - 0.42) / (0.6425 - 0.42);
+        r = lerp(239, 119, t);
+        g = lerp(240, 186, t);
+        b = lerp(209, 153, t);
+    } else if (t >= 0.6425 && t < 0.8575) {
+        t = (t - 0.6425) / (0.8575 - 0.6425);
+        r = lerp(119, 38 , t);
+        g = lerp(186, 39 , t);
+        b = lerp(153, 48 , t);
+    } else {
+        t = (t - 0.8575) / (1 - 0.8575);
+        r = lerp(38 , 0  , t);
+        g = lerp(39 , 0  , t);
+        b = lerp(48 , 0  , t);
+    }
+
+    return rgb_to_hex(r, g, b);
+}
+
+volatile uint32_t progress;
+typedef struct {
+    uint32_t *chunk;
+    uint32_t start;
+    uint32_t height;
+} canvas;
+
+int draw(void *pxl) {
+    canvas *can = (canvas *) pxl;
+    for (int Py = can->start; Py < can->start + can->height && Py <= IM_HEIGHT / 2; Py ++) {
+        float y0 = map_range(0, IM_HEIGHT, MN_Y_SCALE_MIN, MN_Y_SCALE_MAX, Py);
+        for(int Px = 0; Px < IM_WIDTH; Px ++) {
+            float x0 = map_range(0, IM_WIDTH, MN_X_SCALE_MIN, MN_X_SCALE_MAX, Px);
+            float x = 0, y = 0, x2 = 0, y2 = 0;
+            int iteration = 0;
+            while (x2 + y2 <= 4 && iteration < MAX_ITER) {
+                y = 2 * x * y + y0;
+                x = x2 - y2 + x0;
+                x2 = x * x;
+                y2 = y * y;
+                iteration += 1;
+            }
+            uint32_t color = get_color((float)iteration / MAX_ITER);
+            can->chunk[Py * IM_WIDTH + Px] = color;
+            can->chunk[(IM_HEIGHT - Py - 1) * IM_WIDTH + Px] = color;
+            interlocked_inc(&progress);
+        }
+    }
+    return 0;
+}
+
+int main() {
+    init_bump_context(megabytes(1024));
+    BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
+
+    thrd_t rendering_threads[8];
+    uint32_t height_for_threads = IM_HEIGHT / 16;
+    canvas a[8];
+
+    for (int i = 0; i < 8; i ++) {
+        a[i].chunk  = image.pdata;
+        a[i].start  = i * height_for_threads;
+        a[i].height = height_for_threads;
+    }
+
+    if (a[7].start + a[7].height != IM_HEIGHT / 2) {
+        a[7].height = IM_HEIGHT / 2 - a[7].start;
+    }
+
+    for (int i = 0; i < 8; i ++) {
+        thrd_create(&rendering_threads[i], draw, &a[i]);
+    }
+
+    while (progress < IM_WIDTH * IM_HEIGHT / 2) {
+        thrd_sleep_millisecs(20);
+        printf("Progress: %10f%%\r", (float)progress / (IM_WIDTH * IM_HEIGHT / 2.0) * 100);
+    }
+    printf("\n");
+
+    for (int i = 0; i < 8; i ++) {
+        thrd_join(rendering_threads[i], NULL);
+    }
+
+    save_bmp("mandelbrot_threaded.bmp", image);
+    end_bump_context();
+}

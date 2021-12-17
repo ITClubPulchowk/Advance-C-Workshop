@@ -1,7 +1,9 @@
+#include <threads.h>
 #define BMPMALLOC(size) bump(size)
 
 #include "bump.c"
 #include "bmp_lekhak.h"
+#include "threading.h"
 
 #define IM_WIDTH 800
 #define IM_HEIGHT 600
@@ -55,10 +57,8 @@ uint32_t get_color(float t) {
     return rgb_to_hex(r, g, b);
 }
 
-int main() {
-    init_bump_context(megabytes(512));
-    BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
-
+int draw(void *pxl_arr) {
+    uint32_t *canvas = (uint32_t *)pxl_arr;
     for (int Py = 0; Py < IM_HEIGHT / 2; Py ++) {
         float y0 = map_range(0, IM_HEIGHT, MN_Y_SCALE_MIN, MN_Y_SCALE_MAX, Py);
         for(int Px = 0; Px < IM_WIDTH; Px ++) {
@@ -73,10 +73,20 @@ int main() {
                 iteration += 1;
             }
             uint32_t color = get_color((float)iteration / MAX_ITER);
-            image.pdata[Py * IM_WIDTH + Px] = color;
-            image.pdata[(IM_HEIGHT - Py - 1) * IM_WIDTH + Px] = color;
+            canvas[Py * IM_WIDTH + Px] = color;
+            canvas[(IM_HEIGHT - Py - 1) * IM_WIDTH + Px] = color;
         }
     }
+    return 1;
+}
+
+int main() {
+    init_bump_context(megabytes(512));
+    BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
+
+    thrd_t renderer_thread;
+    thrd_create(&renderer_thread, draw, (void *)image.pdata);
+    thrd_join(renderer_thread, NULL);
 
     save_bmp("mandelbrot.bmp", image);
     end_bump_context();
