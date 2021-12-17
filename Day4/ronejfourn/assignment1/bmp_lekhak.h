@@ -19,7 +19,7 @@ typedef struct {
     uint16_t bfReserved1;
     uint16_t bfReserved2;
     uint32_t bfOffBits;
-} BITMAPFILEHEADER;
+} BMPFileHeader;
 
 typedef struct {
     uint32_t biSize;
@@ -33,17 +33,17 @@ typedef struct {
     int32_t  biYPelsPerMeter;
     uint32_t biClrUsed;
     uint32_t biClrImportant;
-} BITMAPINFOHEADER;
+} BMPInfoHeader;
 
 #pragma pack(pop, headers)
 
 typedef struct {
-    BITMAPFILEHEADER fheader;
-    BITMAPINFOHEADER iheader;
+    BMPFileHeader fheader;
+    BMPInfoHeader iheader;
     uint32_t *pdata;
 } BMP;
 
-#define TOTALHEADERSIZE (sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER))
+#define TOTALHEADERSIZE (sizeof(BMPFileHeader) + sizeof(BMPInfoHeader))
 
 static uint32_t get_img_size(BMP t) {
     return t.fheader.bfSize - TOTALHEADERSIZE;
@@ -57,7 +57,7 @@ static BMP create_bmp(uint32_t width, uint32_t height) {
     ret.fheader.bfReserved2 = 0;
     ret.fheader.bfOffBits   = TOTALHEADERSIZE;
 
-    ret.iheader.biSize   = sizeof(BITMAPINFOHEADER);
+    ret.iheader.biSize   = sizeof(BMPInfoHeader);
     ret.iheader.biWidth  =   width ;
     ret.iheader.biHeight = - height;
     ret.iheader.biPlanes = 1;
@@ -76,8 +76,8 @@ static BMP create_bmp(uint32_t width, uint32_t height) {
 
 static void save_bmp(const char *filename, BMP bmp) {
     FILE *fout = fopen(filename, "wb");
-    fwrite(&bmp.fheader, sizeof(BITMAPFILEHEADER), 1, fout);
-    fwrite(&bmp.iheader, sizeof(BITMAPINFOHEADER), 1, fout);
+    fwrite(&bmp.fheader, sizeof(BMPFileHeader), 1, fout);
+    fwrite(&bmp.iheader, sizeof(BMPInfoHeader), 1, fout);
     fwrite(bmp.pdata   , get_img_size(bmp)       , 1, fout);
     fclose(fout);
 }

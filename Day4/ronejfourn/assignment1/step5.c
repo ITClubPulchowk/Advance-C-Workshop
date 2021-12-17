@@ -1,3 +1,4 @@
+#include <stdint.h>
 #define BMPMALLOC(size) bump(size)
 
 #include "bump.c"
@@ -13,6 +14,20 @@
 #define MN_Y_SCALE_MAX 1.12
 #define MAX_ITER 1000
 
+#if PF_LINUX
+#include <unistd.h>
+#define get_core_count() sysconf(_SC_NPROCESSORS_CONF)
+#elif PF_WINDOWS
+#define VC_EXTRALEAN
+#include <Windows.h>
+#include <sysinfoapi.h>
+long get_core_count() {
+    SYSTEM_INFO tmp;
+    GetSystemInfo(&tmp);
+    return tmp.dwNumberOfProcessors;
+}
+#endif
+
 uint32_t rgb_to_hex(uint8_t r, uint8_t g, uint8_t b) {
     return r << 16 | g << 8 | b;
 }
@@ -25,8 +40,6 @@ float map_range(float pmin, float pmax, float nmin, float nmax, float value) {
 float lerp (float v0, float v1, float t) {
     return (1 - t) * v0 + t * v1;
 }
-
-#define xxx 0
 
 uint32_t get_color(float t) {
     uint8_t r = 0, g = 0, b = 0;
@@ -96,21 +109,23 @@ int main() {
     init_bump_context(megabytes(1024));
     BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
 
-    thrd_t rendering_threads[8];
-    uint32_t height_for_threads = IM_HEIGHT / 16;
-    canvas a[8];
+    uint32_t thread_count = get_core_count();
 
-    for (int i = 0; i < 8; i ++) {
+    thrd_t *rendering_threads = bump(thread_count * sizeof(*rendering_threads));
+    uint32_t height_for_threads = IM_HEIGHT / 2 / thread_count;
+    canvas *a = bump(thread_count * sizeof(*a));
+
+    for (int i = 0; i < thread_count; i ++) {
         a[i].chunk  = image.pdata;
         a[i].start  = i * height_for_threads;
         a[i].height = height_for_threads;
     }
 
-    if (a[7].start + a[7].height != IM_HEIGHT / 2) {
-        a[7].height = IM_HEIGHT / 2 - a[7].start;
+    if (a[thread_count - 1].start + a[thread_count - 1].height != IM_HEIGHT / 2) {
+        a[thread_count - 1].height = IM_HEIGHT / 2 - a[thread_count - 1].start;
     }
 
-    for (int i = 0; i < 8; i ++) {
+    for (int i = 0; i < thread_count; i ++) {
         thrd_create(&rendering_threads[i], draw, &a[i]);
     }
 
