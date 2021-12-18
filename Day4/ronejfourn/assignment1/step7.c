@@ -3,9 +3,10 @@
 #include "bump.c"
 #include "bmp_lekhak.h"
 #include "threading.h"
+#include <stdlib.h>
 
-#define IM_WIDTH 800
-#define IM_HEIGHT 600
+#define IM_WIDTH 1600
+#define IM_HEIGHT 1200
 
 #define MN_X_SCALE_MIN -2.00
 #define MN_X_SCALE_MAX 0.47
@@ -15,15 +16,46 @@
 
 #if PF_LINUX
 #include <unistd.h>
+#include <time.h>
+typedef struct timespec timer;
+
 #define get_core_count() sysconf(_SC_NPROCESSORS_CONF)
+
+void start_timing(timer *st) {
+    clock_gettime(CLOCK_MONOTONIC, st);
+}
+
+uint32_t end_timing(timer st) {
+    timer end;
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    return (end.tv_sec - st.tv_sec) * 1000 + (end.tv_nsec - st.tv_nsec) / 1000000;
+}
 #elif PF_WINDOWS
 #define VC_EXTRALEAN
 #include <Windows.h>
 #include <sysinfoapi.h>
+typedef LARGE_INTEGER timer;
+
 long get_core_count() {
     SYSTEM_INFO tmp;
     GetSystemInfo(&tmp);
     return tmp.dwNumberOfProcessors;
+}
+
+void start_timing(timer *StartingTime) {
+    QueryPerformanceCounter(StartingTime);
+}
+
+uint32_t end_timing (timer StartingTime) {
+    LARGE_INTEGER Frequency, EndingTime, ElapsedMicroseconds;
+    QueryPerformanceFrequency(&Frequency);
+    QueryPerformanceCounter(&EndingTime);
+    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+
+    ElapsedMicroseconds.QuadPart *= 1000000;
+    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+
+    return ElapsedMicroseconds.QuadPart / 1000;
 }
 #endif
 
@@ -104,11 +136,17 @@ int draw(void *pxl) {
     return 0;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     init_bump_context(megabytes(1024));
+    timer tmr;
+    start_timing(&tmr);
     BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
-
-    uint32_t thread_count = get_core_count();
+    uint32_t thread_count;
+    if (argc > 1) {
+        thread_count = atoi(argv[1]);
+    } else {
+        thread_count = get_core_count();
+    }
 
     thrd_t *rendering_threads = bump(thread_count * sizeof(*rendering_threads));
     uint32_t height_for_threads = IM_HEIGHT / 2 / thread_count;
@@ -134,10 +172,11 @@ int main() {
     }
     printf("\n");
 
-    for (int i = 0; i < 8; i ++) {
+    for (int i = 0; i < thread_count; i ++) {
         thrd_join(rendering_threads[i], NULL);
     }
-
-    save_bmp("mandelbrot_threaded.bmp", image);
+    printf("Time Elapsed: %10d ms\n", end_timing(tmr));
+    printf("===========================\n");
+    reset_bump_context();
     end_bump_context();
 }

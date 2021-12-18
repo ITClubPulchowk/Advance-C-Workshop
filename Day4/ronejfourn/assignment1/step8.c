@@ -4,8 +4,8 @@
 #include "bmp_lekhak.h"
 #include "threading.h"
 
-#define IM_WIDTH 800
-#define IM_HEIGHT 600
+#define IM_WIDTH 1600
+#define IM_HEIGHT 1600
 
 #define MN_X_SCALE_MIN -2.00
 #define MN_X_SCALE_MAX 0.47
@@ -15,15 +15,46 @@
 
 #if PF_LINUX
 #include <unistd.h>
+#include <time.h>
+typedef struct timespec timer;
+
 #define get_core_count() sysconf(_SC_NPROCESSORS_CONF)
+
+void start_timing(timer *st) {
+    clock_gettime(CLOCK_MONOTONIC, st);
+}
+
+uint32_t end_timing(timer st) {
+    timer end;
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    return end.tv_sec * 1000 - st.tv_sec * 1000 + (end.tv_nsec - st.tv_nsec) / 1000000;
+}
 #elif PF_WINDOWS
 #define VC_EXTRALEAN
 #include <Windows.h>
 #include <sysinfoapi.h>
+typedef LARGE_INTEGER timer;
+
 long get_core_count() {
     SYSTEM_INFO tmp;
     GetSystemInfo(&tmp);
     return tmp.dwNumberOfProcessors;
+}
+
+void start_timing(timer *StartingTime) {
+    QueryPerformanceCounter(StartingTime);
+}
+
+uint32_t end_timing (timer StartingTime) {
+    LARGE_INTEGER Frequency, EndingTime, ElapsedMicroseconds;
+    QueryPerformanceFrequency(&Frequency);
+    QueryPerformanceCounter(&EndingTime);
+    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+
+    ElapsedMicroseconds.QuadPart *= 1000000;
+    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+
+    return ElapsedMicroseconds.QuadPart / 1000;
 }
 #endif
 
@@ -106,38 +137,48 @@ int draw(void *pxl) {
 
 int main() {
     init_bump_context(megabytes(1024));
-    BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
+    timer tmr;
+    FILE *outf = fopen("threadperf.csv", "wb");
+    fprintf(outf, "Threads,Performance\n");
+    for (uint32_t thread_count = 1; thread_count <= get_core_count() * 2; thread_count ++){
+        progress = 0;
+        printf("Thread Count: %10d\n", thread_count);
+        start_timing(&tmr);
+        BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
 
-    uint32_t thread_count = get_core_count();
+        thrd_t *rendering_threads = bump(thread_count * sizeof(*rendering_threads));
+        uint32_t height_for_threads = IM_HEIGHT / 2 / thread_count;
+        canvas *a = bump(thread_count * sizeof(*a));
 
-    thrd_t *rendering_threads = bump(thread_count * sizeof(*rendering_threads));
-    uint32_t height_for_threads = IM_HEIGHT / 2 / thread_count;
-    canvas *a = bump(thread_count * sizeof(*a));
+        for (int i = 0; i < thread_count; i ++) {
+            a[i].chunk  = image.pdata;
+            a[i].start  = i * height_for_threads;
+            a[i].height = height_for_threads;
+        }
 
-    for (int i = 0; i < thread_count; i ++) {
-        a[i].chunk  = image.pdata;
-        a[i].start  = i * height_for_threads;
-        a[i].height = height_for_threads;
+        if (a[thread_count - 1].start + a[thread_count - 1].height != IM_HEIGHT / 2) {
+            a[thread_count - 1].height = IM_HEIGHT / 2 - a[thread_count - 1].start;
+        }
+
+        for (int i = 0; i < thread_count; i ++) {
+            thrd_create(&rendering_threads[i], draw, &a[i]);
+        }
+
+        while (progress < IM_WIDTH * IM_HEIGHT / 2) {
+            thrd_sleep_millisecs(20);
+            printf("Progress: %10f%%\r", (float)progress / (IM_WIDTH * IM_HEIGHT / 2.0) * 100);
+        }
+        printf("\n");
+
+        for (int i = 0; i < thread_count; i ++) {
+            thrd_join(rendering_threads[i], NULL);
+        }
+        uint32_t diff = end_timing(tmr);
+        printf("Time Elapsed: %10d ms\n", diff);
+        printf("===========================\n");
+        fprintf(outf, "%d,%d\n", thread_count, diff);
+        reset_bump_context();
     }
-
-    if (a[thread_count - 1].start + a[thread_count - 1].height != IM_HEIGHT / 2) {
-        a[thread_count - 1].height = IM_HEIGHT / 2 - a[thread_count - 1].start;
-    }
-
-    for (int i = 0; i < thread_count; i ++) {
-        thrd_create(&rendering_threads[i], draw, &a[i]);
-    }
-
-    while (progress < IM_WIDTH * IM_HEIGHT / 2) {
-        thrd_sleep_millisecs(20);
-        printf("Progress: %10f%%\r", (float)progress / (IM_WIDTH * IM_HEIGHT / 2.0) * 100);
-    }
-    printf("\n");
-
-    for (int i = 0; i < 8; i ++) {
-        thrd_join(rendering_threads[i], NULL);
-    }
-
-    save_bmp("mandelbrot_threaded.bmp", image);
+    fclose(outf);
     end_bump_context();
 }

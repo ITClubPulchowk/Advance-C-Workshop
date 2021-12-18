@@ -3,9 +3,10 @@
 #include "bump.c"
 #include "bmp_lekhak.h"
 #include "threading.h"
+#include <stdlib.h>
 
-#define IM_WIDTH 800
-#define IM_HEIGHT 600
+#define IM_WIDTH 8000
+#define IM_HEIGHT 6000
 
 #define MN_X_SCALE_MIN -2.00
 #define MN_X_SCALE_MAX 0.47
@@ -104,11 +105,16 @@ int draw(void *pxl) {
     return 0;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     init_bump_context(megabytes(1024));
     BMP image = create_bmp(IM_WIDTH, IM_HEIGHT);
 
-    uint32_t thread_count = get_core_count();
+    uint32_t thread_count;
+    if (argc > 1) {
+        thread_count = atoi(argv[1]);
+    } else {
+        thread_count = get_core_count();
+    }
 
     thrd_t *rendering_threads = bump(thread_count * sizeof(*rendering_threads));
     uint32_t height_for_threads = IM_HEIGHT / 2 / thread_count;
