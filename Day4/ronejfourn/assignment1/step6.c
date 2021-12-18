@@ -46,29 +46,26 @@ uint32_t get_color(float t) {
 
     if (t >= 0.0 && t < 0.16) {
         t = (t - 0) / (0.16 - 0);
-        r = lerp(211, 215, t);
-        g = lerp(63 , 192, t);
-        b = lerp(73 , 208, t);
+        r = lerp(0  , 32 , t);
+        g = lerp(7  , 107, t);
+        b = lerp(100, 203, t);
     } else if (t >= 0.16 && t < 0.42) {
         t = (t - 0.16) / (0.42 - 0.16);
-        r = lerp(215, 239, t);
-        g = lerp(192, 240, t);
-        b = lerp(208, 209, t);
+        r = lerp(32 , 237, t);
+        g = lerp(107, 255, t);
+        b = lerp(203, 255, t);
     } else if (t >= 0.42 && t < 0.6425) {
         t = (t - 0.42) / (0.6425 - 0.42);
-        r = lerp(239, 119, t);
-        g = lerp(240, 186, t);
-        b = lerp(209, 153, t);
+        r = lerp(237, 255, t);
+        g = lerp(255, 170, t);
+        b = lerp(255, 0  , t);
     } else if (t >= 0.6425 && t < 0.8575) {
         t = (t - 0.6425) / (0.8575 - 0.6425);
-        r = lerp(119, 38 , t);
-        g = lerp(186, 39 , t);
-        b = lerp(153, 48 , t);
+        r = lerp(255, 0  , t);
+        g = lerp(170, 2  , t);
+        b = lerp(0  , 0  , t);
     } else {
-        t = (t - 0.8575) / (1 - 0.8575);
-        r = lerp(38 , 0  , t);
-        g = lerp(39 , 0  , t);
-        b = lerp(48 , 0  , t);
+        g = 2;
     }
 
     return rgb_to_hex(r, g, b);
