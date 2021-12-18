@@ -5,8 +5,8 @@
 #include "threading.h"
 #include <stdlib.h>
 
-#define IM_WIDTH 8000
-#define IM_HEIGHT 6000
+#define IM_WIDTH 800
+#define IM_HEIGHT 600
 
 #define MN_X_SCALE_MIN -2.00
 #define MN_X_SCALE_MAX 0.47
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
     }
     printf("\n");
 
-    for (int i = 0; i < 8; i ++) {
+    for (int i = 0; i < thread_count; i ++) {
         thrd_join(rendering_threads[i], NULL);
     }
 

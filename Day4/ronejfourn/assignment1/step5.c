@@ -131,7 +131,7 @@ int main() {
     }
     printf("\n");
 
-    for (int i = 0; i < 8; i ++) {
+    for (int i = 0; i < thread_count; i ++) {
         thrd_join(rendering_threads[i], NULL);
     }
 
