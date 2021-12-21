@@ -91,7 +91,7 @@ Hint: Each `Merge` in the Merge sort can be done in separated thread. You may ne
 3. You will be using thread safe queue to push tasks for the thread pool.
 4. For rendering each frame, conceptually divide the screen space into M rectangular parts, and push that information to the queue. Now your queue would be populated with M tasks.
 Note: You need not set M = N. M < N would underutilize the thread pool. However, if you experiment a little you may find that some M > N may be more performant.
-5. The result of the computation can be stored in a shared global buffer and directly rendered by OpenGL. Here you don't need to lock the global buffer because, each threads write to an independent portion of the buffer while rendering a frame.
+5. The result of the computation can be stored in a shared global buffer and directly rendered by OpenGL. Here you don't need to lock the global buffer because, each thread writes to an independent portion of the buffer while rendering a frame.
 6. First, draw the mandelbrot set with center of screen focused at point -1.4+0i and scale 10^-2 (i.e. 0+0i to 1+0i in the mandlebrot set takes 100 pixels).
 7. For each frame, you follow the following procedure:
 
@@ -105,13 +105,13 @@ Note: You need not set M = N. M < N would underutilize the thread pool. However,
 
    7.5 The main thread waits for the counter to be equal to M i.e. it waits for all task on the queue to be complete.
 
-   7.6 If you rendering to BMP file, save the buffer into a BMP file. And if you are rendering to screen, tell OpenGL to render it to screen.
+   7.6 If you are rendering to BMP file, save the buffer into a BMP file. And if you are rendering to screen, tell OpenGL to render it to screen.
 
-   7.7 If rendering to screen wait for any keyboard input and then scale by a factor of 2. i.e. divide scale value by 2. If rendering to BMP, you need not wait for any input.
+   7.7 If rendering to screen, wait for any keyboard input and then scale by a factor of 2. i.e. divide scale value by 2. If rendering to BMP, you need not wait for any input.
 
-   7.8 Stop after scaling 14 times.
+   7.8 Stop after scaling 14 number of times.
 
-8. (Optional) If you implemented screen rendering, its not too much of a task to allow panning and zoom in & out. For that use three shared global variables scale, translationX and translationY. After rendering each frame, the main thread waits for a key press and depending upon the key, changes the three values.
+8. (Optional) If you implemented screen rendering, its not too much of a task to allow panning and zoom in & out. For that use three shared global variables: scale, translationX and translationY. After rendering each frame, the main thread waits for a key press and depending upon the key, changes the three values.
 ```
 | Key | Operation              |
 |-----|------------------------|
@@ -120,5 +120,5 @@ Note: You need not set M = N. M < N would underutilize the thread pool. However,
 | s   | decrement translationY |
 | w   | increment translationY |
 | k   | scale := scale / 2     |
-| l   | sacle := scale /2      |
+| l   | sacle := scale * 2     |
 ```
