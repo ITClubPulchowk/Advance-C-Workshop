@@ -18,7 +18,7 @@ Position = 0.42    Color = (237, 255, 255)
 Position = 0.6425  Color = (255, 170,   0)
 Position = 0.8575  Color = (  0,   2,   0)
 ```
-Here, you will need to map the iteration value, which ranges from 0 to you maximum iteration count to 0 to 1. Use [sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function) function to perform that mapping.
+Here, you will need to map the iteration value, which ranges from 0 to you maximum iteration count to 0 to 1. Use linear map function to map the range from 0 to max iteration into 0 to 1.
 Then use [linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support) to blend the color between various position values. 
 
   c. Create another thread and plot the mandelbrot set in another thread. In the main thread, you just wait for the child thread to finish rendering, after the child thread finishes rendering, the main thread should writes the pixel buffer to BMP file.
