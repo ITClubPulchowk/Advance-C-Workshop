@@ -33,7 +33,7 @@ The main thread should print progress in the console in regular intervals of tim
 
 Hint: Create a shared data structure were you can put the input parameters to calculate the color of a single pixel, and each thread can read from that data structure and color the single pixel.
     - Windows: https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo
-    - Linunx: https://man7.org/linux/man-pages/man3/sysconf.3.html
+    - Linux: https://man7.org/linux/man-pages/man3/sysconf.3.html
 
 The main thread should still print progress of the plot.
 
