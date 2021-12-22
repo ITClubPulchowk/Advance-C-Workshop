@@ -4,11 +4,13 @@
 **Note: You are expected to submit each step of the assignment**
 ### 1. [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set)
 
-  a. Create a pixel buffer of size 800x600 and clear it to green color (0, 0, 255) and write it to BMP file named `image.bmp`.
+  a. Create a pixel buffer of size 1280x720 and clear it to green color (0, 0, 255) and write it to BMP file named `image.bmp`.
 BMP is a very simple image storage format. You can implement the features of BMP you need to write a BMP file using the [reference here](https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage). If you do not want to implement the BMP writer yourself, @Pramish-Aryal has a very easy to integrate and use [single header library here](https://github.com/Pramish-Aryal/pimp).
 
   b. Plot a mandelbrot set in the pixel buffer. There are [various algorithms](https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set) to implement the mandelbrot set. The pesudo code for one of the simplest method to plot mandelbrot set is as follows (for more details read, wikipedia page):
 ![MandelbrotPseudoCode](./MandelbrotPseudoCode.png)
+
+Use at least `10000` as the maximum number of iteration.
 
 For color palette, use the following values:
 ```c
