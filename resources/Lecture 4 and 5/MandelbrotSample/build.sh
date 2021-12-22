@@ -13,5 +13,5 @@ else
     fi
 fi
 
-echo Building runner
-${COMPILER} ./mandelbrot.c -o mandelbrot -O2
+echo Building mandelbrot
+${COMPILER} ./mandelbrot.c -o mandelbrot -O2 -lpthread
