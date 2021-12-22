@@ -59,6 +59,18 @@ ${COMPILER} ./threads_7_semaphore.c -o ./debug/threads_7_semaphore -lpthread
 echo Building Debug ./threads_8_deadlock.c
 ${COMPILER} ./threads_8_deadlock.c -o ./debug/threads_8_deadlock -lpthread
 
+echo Building Debug ./threads_9_thread_local_motivation.c
+${COMPILER} ./threads_9_thread_local_motivation.c -o ./debug/threads_9_thread_local_motivation -lpthread
+
+echo Building Debug ./threads_9_thread_local_usage.c
+${COMPILER} ./threads_9_thread_local_usage.c -o ./debug/threads_9_thread_local_usage -lpthread
+
+echo Building Debug ./threads_10_mt_sort_thread_pool.c
+${COMPILER} ./threads_10_mt_sort_thread_pool.c -o ./debug/threads_10_mt_sort_thread_pool -lpthread
+
+echo Building Debug ./joke.c
+${COMPILER} ./joke.c -o ./debug/joke -lpthread
+
 #############################################################################################
 
 mkdir -p optimized
@@ -99,5 +111,17 @@ ${COMPILER} ./threads_6_no_mutex.c -o ./optimized/threads_6_no_mutex -O2 -lpthre
 echo Building Optimized ./threads_7_semaphore.c
 ${COMPILER} ./threads_7_semaphore.c -o ./optimized/threads_7_semaphore -O2 -lpthread
 
-echo Building Debug ./threads_8_deadlock.c
-${COMPILER} ./threads_8_deadlock.c -o ./debug/threads_8_deadlock -O2 -lpthread
+echo Building Optimized ./threads_8_deadlock.c
+${COMPILER} ./threads_8_deadlock.c -o ./optimized/threads_8_deadlock -O2 -lpthread
+
+echo Building Optimized ./threads_9_thread_local_motivation.c
+${COMPILER} ./threads_9_thread_local_motivation.c -o ./optimized/threads_9_thread_local_motivation -O2 -lpthread
+
+echo Building Optimized ./threads_9_thread_local_usage.c
+${COMPILER} ./threads_9_thread_local_usage.c -o ./optimized/threads_9_thread_local_usage -O2 -lpthread
+
+echo Building Optimized ./threads_10_mt_sort_thread_pool.c
+${COMPILER} ./threads_10_mt_sort_thread_pool.c -o ./optimized/threads_10_mt_sort_thread_pool -O2 -lpthread
+
+echo Building Optimized ./joke.c
+${COMPILER} ./joke.c -o ./optimized/joke -O2 -lpthread
