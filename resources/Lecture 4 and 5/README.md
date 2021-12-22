@@ -11,14 +11,43 @@ BMP is a very simple image storage format. You can implement the features of BMP
 ![MandelbrotPseudoCode](./MandelbrotPseudoCode.png)
 
 For color palette, use the following values:
+```c
+0.258824, 0.117647, 0.058824
+0.098039, 0.027451, 0.101961
+0.035294, 0.003922, 0.184314
+0.015686, 0.015686, 0.286275
+0.000000, 0.027451, 0.392157
+0.047059, 0.172549, 0.541176
+0.094118, 0.321569, 0.694118
+0.223529, 0.490196, 0.819608
+0.525490, 0.709804, 0.898039
+0.827451, 0.925490, 0.972549
+0.945098, 0.913726, 0.749020
+0.972549, 0.788235, 0.372549
+1.000000, 0.666667, 0.000000
+0.800000, 0.501961, 0.000000
+0.600000, 0.341176, 0.000000
+0.415686, 0.203922, 0.011765
 ```
-Position = 0.0     Color = (  0,   7, 100)
-Position = 0.16    Color = ( 32, 107, 203)
-Position = 0.42    Color = (237, 255, 255)
-Position = 0.6425  Color = (255, 170,   0)
-Position = 0.8575  Color = (  0,   2,   0)
+
+Here, you will need to index the color palette using the iteration value, which ranges from 0 to you maximum iteration (rotate the values from 0 to 15 incase the iteration value is greater than 15). Here sample 2 color values using iteration and iteration + 1 as mentioned previously. Use the position value to linearly interpolate(https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support) between the 2 color values. To get position value, simply divide the iteration by maximum iteration count. Here's the sample code of how it might look: 
+```c
+uint32_t mandelbrot_color(uint32_t iterations, uint32_t max_iterations, float x, float y) {
+	if (iterations < max_iterations) {
+		Color color_a = Palette[iterations & 15];
+		Color color_b = Palette[(iterations + 1) & 15];
+		float t = (float)iterations / (float)max_iterations;
+		
+		Color color;
+		color.r = lerp(color_a.r, color_b.r, t);
+		color.g = lerp(color_a.g, color_b.g, t);
+		color.b = lerp(color_a.b, color_b.b, t);
+
+		return ColorToUint32(color);
+	}
+	return 0;
+}
 ```
-Here, you will need to map the iteration value, which ranges from 0 to you maximum iteration count to 0 to 1. Simply divide the iteration by maximum iteration count to get position value. Then use [linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support) to blend the color between various position values.
 
   c. Create another thread and plot the mandelbrot set in another thread. In the main thread, you just wait for the child thread to finish rendering, after the child thread finishes rendering, the main thread should writes the pixel buffer to BMP file.
 
