@@ -1,4 +1,4 @@
-# Threading I Samples
+# Threading Samples
 These are the sample code provided for the Lecture 3: Threading I of the Advanced-C-Workshop.
 These programs are intended to be followed along with the provided note.
 
