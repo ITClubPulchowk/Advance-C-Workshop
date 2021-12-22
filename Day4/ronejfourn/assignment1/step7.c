@@ -74,6 +74,6 @@ int main(int argc, char *argv[]) {
     }
     printf("Time Elapsed: %10d ms\n", end_timing(tmr));
     printf("===========================\n");
-    save_bmp("mandelbrot_threaded.bmp", image);
+    save_bmp("image.bmp", image);
     end_bump_context();
 }

@@ -32,6 +32,6 @@ int main() {
     thrd_create(&renderer_thread, draw, (void *)image.pdata);
     thrd_join(renderer_thread, NULL);
 
-    save_bmp("mandelbrot.bmp", image);
+    save_bmp("image.bmp", image);
     end_bump_context();
 }

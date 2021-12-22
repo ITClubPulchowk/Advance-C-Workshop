@@ -23,6 +23,6 @@ int main() {
         }
     }
 
-    save_bmp("mandelbrot.bmp", image);
+    save_bmp("image.bmp", image);
     end_bump_context();
 }

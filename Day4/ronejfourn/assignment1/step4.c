@@ -41,6 +41,6 @@ int main() {
     printf("\n");
 
     thrd_join(renderer_thread, NULL);
-    save_bmp("mandelbrot.bmp", image);
+    save_bmp("image.bmp", image);
     end_bump_context();
 }

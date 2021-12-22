@@ -72,6 +72,6 @@ int main(int argc, char *argv[]) {
         thrd_join(rendering_threads[i], NULL);
     }
 
-    save_bmp("mandelbrot_threaded.bmp", image);
+    save_bmp("image.bmp", image);
     end_bump_context();
 }
