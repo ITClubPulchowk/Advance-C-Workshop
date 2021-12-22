@@ -21,6 +21,10 @@ cl /nologo /Zi ../threads_5_custom_mutex.c
 cl /nologo /Zi ../threads_6_no_mutex.c
 cl /nologo /Zi ../threads_7_semaphore.c
 cl /nologo /Zi ../threads_8_deadlock.c
+cl /nologo /Zi ../threads_9_thread_local_motivation.c
+cl /nologo /Zi ../threads_9_thread_local_usage.c
+cl /nologo /Zi ../threads_10_mt_sort_thread_pool.c
+cl /nologo /Zi ../joke.c
 popd
 
 if not exist "optimized" mkdir optimized
@@ -39,6 +43,10 @@ cl /nologo /O2 /Zi ../threads_5_custom_mutex.c
 cl /nologo /O2 /Zi ../threads_6_no_mutex.c
 cl /nologo /O2 /Zi ../threads_7_semaphore.c
 cl /nologo /O2 /Zi ../threads_8_deadlock.c
+cl /nologo /O2 /Zi ../threads_9_thread_local_motivation.c
+cl /nologo /O2 /Zi ../threads_9_thread_local_usage.c
+cl /nologo /O2 /Zi ../threads_10_mt_sort_thread_pool.c
+cl /nologo /O2 /Zi ../joke.c
 popd
 
 goto Finished

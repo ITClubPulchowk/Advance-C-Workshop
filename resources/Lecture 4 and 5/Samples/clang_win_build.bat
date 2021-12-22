@@ -47,6 +47,18 @@ clang .\threads_7_semaphore.c -o .\debug\threads_7_semaphore.exe
 echo Building Debug .\threads_8_deadlock.c
 clang .\threads_8_deadlock.c -o .\debug\threads_8_deadlock.exe
 
+echo Building Debug .\threads_9_thread_local_motivation.c
+clang .\threads_9_thread_local_motivation.c -o .\debug\threads_9_thread_local_motivation.exe
+
+echo Building Debug .\threads_9_thread_local_usage.c
+clang .\threads_9_thread_local_usage.c -o .\debug\threads_9_thread_local_usage.exe
+
+echo Building Debug .\threads_10_mt_sort_thread_pool.c
+clang .\threads_10_mt_sort_thread_pool.c -o .\debug\threads_10_mt_sort_thread_pool.exe
+
+echo Building Debug .\joke.c
+clang .\joke.c -o .\debug\joke.exe
+
 Rem ##########################################################################
 
 if not exist "optimized" mkdir optimized
@@ -87,8 +99,20 @@ clang .\threads_6_no_mutex.c -o .\optimized\threads_6_no_mutex.exe -O2
 echo Building Optimized .\threads_7_semaphore.c
 clang .\threads_7_semaphore.c -o .\optimized\threads_7_semaphore.exe -O2
 
-echo Building Debug .\threads_8_deadlock.c
-clang .\threads_8_deadlock.c -o .\debug\threads_8_deadlock.exe -O2
+echo Building Optimized .\threads_8_deadlock.c
+clang .\threads_8_deadlock.c -o .\optimized\threads_8_deadlock.exe -O2
+
+echo Building Optimized .\threads_9_thread_local_motivation.c
+clang .\threads_9_thread_local_motivation.c -o .\optimized\threads_9_thread_local_motivation.exe -O2
+
+echo Building Optimized .\threads_9_thread_local_usage.c
+clang .\threads_9_thread_local_usage.c -o .\optimized\threads_9_thread_local_usage.exe -O2
+
+echo Building Optimized .\threads_10_mt_sort_thread_pool.c
+clang .\threads_10_mt_sort_thread_pool.c -o .\optimized\threads_10_mt_sort_thread_pool.exe -O2
+
+echo Building Optimized .\joke.c
+clang .\joke.c -o .\optimized\joke.exe -O2
 
 goto Finished
 

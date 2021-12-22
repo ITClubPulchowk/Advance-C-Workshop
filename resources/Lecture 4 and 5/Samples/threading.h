@@ -8,6 +8,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#define thread_local __declspec(thread)
+
 typedef HANDLE thrd_t;
 typedef int32_t(*thrd_start_t)(void *);
 
