@@ -32,7 +32,7 @@ For color palette, use the following values:
 0.415686, 0.203922, 0.011765
 ```
 
-Here, you will need to index the color palette using the iteration value, which ranges from 0 to you maximum iteration (rotate the values from 0 to 15 incase the iteration value is greater than 15). Here sample 2 color values using iteration and iteration + 1 as mentioned previously. Use the position value to linearly interpolate(https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support) between the 2 color values. To get position value, simply divide the iteration by maximum iteration count. Here's the sample code of how it might look: 
+Here, you will need to index the color palette using the iteration value, which ranges from 0 to you maximum iteration (rotate the values from 0 to 15 incase the iteration value is greater than 15). Here sample 2 color values using iteration and iteration + 1 as mentioned previously. Use the position value to [linearly interpolate](https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support) between the 2 color values. To get position value, simply divide the iteration by maximum iteration count. Here's the sample code of how it might look: 
 ```c
 uint32_t mandelbrot_color(uint32_t iterations, uint32_t max_iterations, float x, float y) {
 	if (iterations < max_iterations) {
