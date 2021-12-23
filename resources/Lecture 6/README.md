@@ -50,6 +50,10 @@ Here **ShapeType** indicates whether the **Object** has the shape of a Circle (i
 1
 ```
 
-Here the first line indicates whether the **Object** with **ShapeId** 1 collides with **Object**(s) with **ShapeId** 2 to 10. Here each output (1 or 0) is separated by a tab space. Then the next line indicates whether the Object with **ShapeId** 2 collides with **Object**(s) with **ShapeId** 3 to 10 and so on.
-
 **Use both, switch case and function dispatch, for finding collision between various shapes.**
+
+<hr>
+
+_Hint: The shapes, when plotted, look something like this._
+
+![Shapes plot](plot.png)
