@@ -6,6 +6,7 @@ The skeleton with main function is already given in the file 'srcCallbacks.c'.
 Fill in the parts needed.
 In the main function,
 **add lines only in the commented area**
+and 
 **you can add further parameters to the calculator function if needed**
 
 Output in terminal should be as follows
