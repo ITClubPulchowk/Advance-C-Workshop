@@ -139,11 +139,11 @@ static inline uint32_t interlocked_cmpxchg(uint32_t volatile *dst, uint32_t exch
 #else
 
 static inline uint32_t interlocked_inc(uint32_t volatile *addend) {
-	return __sync_fetch_and_add(addend, 1);
+	return __sync_fetch_and_add(addend, 1) + 1;
 }
 
 static inline uint32_t interlocked_dec(uint32_t volatile *addend) {
-	return __sync_fetch_and_sub(addend, 1);
+	return __sync_fetch_and_sub(addend, 1) - 1;
 }
 
 static inline uint32_t interlocked_add(uint32_t volatile *addend, uint32_t value) {
