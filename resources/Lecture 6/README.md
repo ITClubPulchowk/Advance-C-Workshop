@@ -1,4 +1,4 @@
-## Assgnment 1
+## Assignment 1
 
 Implement a simple calculator program using callbacks.
 The calculator function should should operate on two numbers based on callback it recieves.
