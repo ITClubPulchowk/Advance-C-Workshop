@@ -4,6 +4,7 @@ where msbuild >nul 2>nul
 if %ERRORLEVEL% neq 0 goto SkipBuild
 
 cl /nologo /D_CRT_SECURE_NO_WARNINGS /DUNICODE /Zi /O2 mandelbrot.c
+cl /nologo /D_CRT_SECURE_NO_WARNINGS /DUNICODE /Zi /O2 mandelbrot_simd.c
 
 goto Finished
 
