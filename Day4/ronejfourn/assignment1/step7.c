@@ -7,8 +7,8 @@ volatile uint32_t in;
 
 int draw(void *pxl) {
     uint32_t *can = (uint32_t *) pxl;
-    uint32_t Py = interlocked_inc(&in) + 1;
-    for (; in <= IM_HEIGHT / 2; Py = interlocked_inc(&in) + 1) {
+    uint32_t Py = interlocked_inc(&in);
+    for (; in <= IM_HEIGHT / 2; Py = interlocked_inc(&in)) {
         Py -= 1;
         float y0 = map_range(0, IM_HEIGHT, MN_Y_SCALE_MIN, MN_Y_SCALE_MAX, Py);
         for(uint32_t Px = 0; Px < IM_WIDTH; Px ++) {
