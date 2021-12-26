@@ -18,7 +18,6 @@ typedef struct {
 } lexer;
 
 typedef int (*collision) (shape, shape);
-#define SQRT2 1.414213562373095
 #define abs(a) ((a) < 0 ? (a) * -1 : (a))
 
 int circle_circle (shape c1, shape c2) {
@@ -35,29 +34,23 @@ int circle_square (shape c1, shape c2) {
         circle = c1;
         square = c2;
     }
-    uint32_t dist_sqr = (c1.cx - c2.cx) * (c1.cx - c2.cx) + (c1.cy - c2.cy) * (c1.cy - c2.cy);
-    double d = (circle.radius + square.length / SQRT2);
-    if (dist_sqr > d * d) {
-        return 0;
-    } else {
-        int dif_x = square.cx - circle.cx;
-        int dif_y = square.cy - circle.cy;
-        double c_sqr;
-        if (abs(dif_x) > abs(dif_y)) {
-            if (dif_x < 0) {
-                c_sqr = (square.cx + square.length / 2.0 - circle.cx) * (square.cx + square.length / 2.0 - circle.cx);
-            } else {
-                c_sqr = (square.cx - square.length / 2.0 - circle.cx) * (square.cx - square.length / 2.0 - circle.cx);
-            }
+    int dif_x = square.cx - circle.cx;
+    int dif_y = square.cy - circle.cy;
+    double c_sqr;
+    if (abs(dif_x) > abs(dif_y)) {
+        if (dif_x < 0) {
+            c_sqr = (square.cx + square.length / 2.0 - circle.cx) * (square.cx + square.length / 2.0 - circle.cx);
         } else {
-            if (dif_y < 0) {
-                c_sqr = (square.cy + square.length / 2.0 - circle.cy) * (square.cy + square.length / 2.0 - circle.cy);
-            } else {
-                c_sqr = (square.cy - square.length / 2.0 - circle.cy) * (square.cy - square.length / 2.0 - circle.cy);
-            }
+            c_sqr = (square.cx - square.length / 2.0 - circle.cx) * (square.cx - square.length / 2.0 - circle.cx);
         }
-        return c_sqr <= circle.radius * circle.radius;
+    } else {
+        if (dif_y < 0) {
+            c_sqr = (square.cy + square.length / 2.0 - circle.cy) * (square.cy + square.length / 2.0 - circle.cy);
+        } else {
+            c_sqr = (square.cy - square.length / 2.0 - circle.cy) * (square.cy - square.length / 2.0 - circle.cy);
+        }
     }
+    return c_sqr <= circle.radius * circle.radius;
 }
 
 int square_square (shape c1, shape c2) {
