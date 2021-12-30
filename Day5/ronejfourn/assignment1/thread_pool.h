@@ -1,6 +1,4 @@
 #include "threading.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 #define SI static inline
 
@@ -33,9 +31,8 @@
 #endif
 
 int draw(void *arg);
-SI uint32_t init_thrd_pool(uint32_t num) {
-    uint32_t thrd_count = num ? num : get_core_count();
-
+SI uint32_t init_thrd_pool() {
+    uint32_t thrd_count = get_core_count();
     thrd_t thr;
     for (int i = 0; i < thrd_count; i ++)
         thrd_create(&thr, draw, &i);
