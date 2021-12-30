@@ -34,6 +34,10 @@ int circle_square (shape c1, shape c2) {
         circle = c1;
         square = c2;
     }
+    double diagonal = square.length / 1.414213562373095;
+    double cen_dist = (square.cx - circle.cx) * (square.cx - circle.cx) + (square.cy - circle.cy) * (square.cy - circle.cy);
+    if (cen_dist > (diagonal + circle.radius) * (diagonal + circle.radius)) return 0;
+
     int dif_x = square.cx - circle.cx;
     int dif_y = square.cy - circle.cy;
     double c_sqr;
