@@ -1,4 +1,3 @@
-#pragma once
 
 #include <assert.h>
 #include <stdint.h>
@@ -6,6 +5,7 @@
 #if defined(_MSC_VER)
 
 #define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #define thread_local __declspec(thread)
@@ -139,11 +139,11 @@ static inline uint32_t interlocked_cmpxchg(uint32_t volatile *dst, uint32_t exch
 #else
 
 static inline uint32_t interlocked_inc(uint32_t volatile *addend) {
-	return __sync_fetch_and_add(addend, 1) + 1;
+	return __sync_fetch_and_add(addend, 1);
 }
 
 static inline uint32_t interlocked_dec(uint32_t volatile *addend) {
-	return __sync_fetch_and_sub(addend, 1) - 1;
+	return __sync_fetch_and_sub(addend, 1);
 }
 
 static inline uint32_t interlocked_add(uint32_t volatile *addend, uint32_t value) {
@@ -153,48 +153,4 @@ static inline uint32_t interlocked_add(uint32_t volatile *addend, uint32_t value
 static inline uint32_t interlocked_cmpxchg(uint32_t volatile *dst, uint32_t exchange, uint32_t comperand) {
 	return __sync_val_compare_and_swap(dst, exchange, comperand);
 }
-#endif
-
-
-//
-//
-//
-
-#if defined(__gnu_linux__) || defined(__linux__) || defined(linux) || defined(__linux)
-
-#include <time.h>
-
-static inline uint64_t clock_counts_now() {
-	return (uint64_t)clock();
-}
-
-static inline uint64_t clock_frequency() {
-	return CLOCKS_PER_SEC;
-}
-
-static inline float clock_time(uint64_t counts) {
-	return 1000.0f * ((float)(counts)) / CLOCKS_PER_SEC;
-}
-
-#elif defined(_WIN64) || defined(_WIN32)
-
-static inline uint64_t clock_counts_now() {
-	LARGE_INTEGER count;
-	QueryPerformanceCounter(&count);
-	return count.QuadPart;
-}
-
-static inline uint64_t clock_frequency() {
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-	return freq.QuadPart;
-}
-
-static inline float clock_time(uint64_t counts) {
-	uint64_t freq = clock_frequency();
-	return (1000000.0f * (float)(counts) / (float)freq) / 10000.0f;
-}
-
-#else
-#	error Unsupported Operating System
 #endif
