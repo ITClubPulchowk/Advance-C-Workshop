@@ -7,7 +7,7 @@
 #define MN_X_SCALE_MAX 4.00
 #define MN_Y_SCALE_MIN -2.25
 #define MN_Y_SCALE_MAX 2.25
-static uint32_t MAX_ITER = 100000;
+#define MAX_ITER 10000
 
 typedef struct {
     float r, g, b;

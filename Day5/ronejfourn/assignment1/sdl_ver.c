@@ -18,7 +18,7 @@ void screen_to_world(float nsx, float nsy, float *fwx, float *fwy) {
     *fwy = (nsy) / fScale + fOffsetY;
 }
 
-uint32_t height;
+uint32_t srq_len;
 volatile uint32_t offset;
 volatile uint32_t turn;
 
@@ -33,7 +33,7 @@ uint32_t get_iter(float x0, float y0) {
     if (q * (q + (nx0 - 0.25)) <= 0.25 * ny0 * ny0 || (nx0 + 1) * (nx0 + 1) + ny0 * ny0 <= 1 / 16.0) {
         iteration = MAX_ITER;
     } else {
-        while (x2 + y2 <= 9 && iteration < MAX_ITER) {
+        while (x2 + y2 <= 4 && iteration < MAX_ITER) {
             y = 2 * x * y + ny0;
             x = x2 - y2 + nx0;
             x2 = x * x;
@@ -47,16 +47,16 @@ uint32_t get_iter(float x0, float y0) {
 
 int draw(void *arg) {
     while (1) {
-        thrd_sleep_millisecs(2);
-        uint32_t offs = interlocked_add(&offset, height) - height;
+        thrd_sleep_millisecs(1);
+        uint32_t offs = interlocked_add(&offset, srq_len) - srq_len;
 
         float y0 = map_range(0, IM_HEIGHT, MN_Y_SCALE_MIN, MN_Y_SCALE_MAX, offs);
-        float y1 = map_range(0, IM_HEIGHT, MN_Y_SCALE_MIN, MN_Y_SCALE_MAX, offs + height);
+        float y1 = map_range(0, IM_HEIGHT, MN_Y_SCALE_MIN, MN_Y_SCALE_MAX, offs + srq_len);
 
-        for(uint32_t Px = 0; Px < IM_WIDTH; Px += height) {
+        for(uint32_t Px = 0; Px < IM_WIDTH; Px += srq_len) {
 
             float x0 = map_range(0, IM_WIDTH , MN_X_SCALE_MIN, MN_X_SCALE_MAX, Px);
-            float x1 = map_range(0, IM_WIDTH , MN_X_SCALE_MIN, MN_X_SCALE_MAX, Px + height);
+            float x1 = map_range(0, IM_WIDTH , MN_X_SCALE_MIN, MN_X_SCALE_MAX, Px + srq_len);
 
             uint32_t iter0 = get_iter(x0, y0);
             uint32_t iter1 = get_iter(x1, y0);
@@ -65,15 +65,15 @@ int draw(void *arg) {
 
             if (iter0 == iter1 && iter0 == iter2 && iter0 == iter3) {
                 uint32_t color = get_color(iter0);
-                for (uint32_t ty = offs; ty < offs + height && ty < IM_HEIGHT; ty ++) {
-                    for (uint32_t tx = Px; tx < Px + height && tx < IM_WIDTH; tx ++) {
+                for (uint32_t ty = offs; ty < offs + srq_len && ty < IM_HEIGHT; ty ++) {
+                    for (uint32_t tx = Px; tx < Px + srq_len && tx < IM_WIDTH; tx ++) {
                         canvas[ty * IM_WIDTH + tx] = color;
                     }
                 }
             } else {
-                for (uint32_t ty = offs; ty < offs + height && ty < IM_HEIGHT; ty ++) {
+                for (uint32_t ty = offs; ty < offs + srq_len && ty < IM_HEIGHT; ty ++) {
                     float y0 = map_range(0, IM_HEIGHT, MN_Y_SCALE_MIN, MN_Y_SCALE_MAX, ty);
-                    for (uint32_t tx = Px; tx < Px + height && tx < IM_WIDTH; tx ++) {
+                    for (uint32_t tx = Px; tx < Px + srq_len && tx < IM_WIDTH; tx ++) {
                         float x0 = map_range(0, IM_WIDTH , MN_X_SCALE_MIN, MN_X_SCALE_MAX, tx);
                         canvas[ty * IM_WIDTH + tx] = get_color(get_iter(x0, y0));
                     }
@@ -102,8 +102,7 @@ int main() {
 
     float minX, minY, maxX, maxY, nmouseX, nmouseY;
     SDL_Event e;
-    height = 8;
-    init_thrd_pool(0);
+    srq_len = init_thrd_pool(0);
     while (1) {
 
         while (SDL_PollEvent(&e)) {
@@ -157,11 +156,11 @@ int main() {
         screen_to_world(nmouseX, nmouseY, &beforeZoomX, &beforeZoomY);
 
         if (sHeld) {
-            fScale *= 0.99;
+            fScale *= 0.5;
             turn = 0;
             offset = 0;
         } else if (aHeld) {
-            fScale *= 1.01;
+            fScale *= 2;
             turn = 0;
             offset = 0;
         }
