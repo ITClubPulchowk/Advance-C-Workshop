@@ -1,6 +1,9 @@
 #include "threading.h"
 
 #include <stdlib.h>
+#ifdef __linux__
+#include <unistd.h>
+#endif
 
 //
 //
