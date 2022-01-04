@@ -18,7 +18,7 @@ void sort(poly *first, int start_index, int end_index)
     {
         for (int j = l + 1; j < end_index; j++)
         {
-            if (first[j].power < first[l].power)
+            if (first[j].power > first[l].power)
             {
                 tempo = first[j];
                 first[j] = first[l];
