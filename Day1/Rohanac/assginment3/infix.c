@@ -1,4 +1,3 @@
-//binary tree struct
 #include <stdio.h>
 #include <stdlib.h>
 #define input_file "infix_input.txt"
@@ -6,19 +5,6 @@
 char *get_in_buffer(long *file_size)
 {
     char *str = NULL;
-    FILE *fp = fopen(input_file, "rb");
-    if (!fp)
-    {
-        printf("No file");
-        return NULL;
-    }
-    fseek(fp, 0L, SEEK_END);
-    *file_size = ftell(fp);
-    fseek(fp, 0L, SEEK_SET);
-    str = malloc(sizeof(*str) * (*file_size + 1));
-    fread(str, *file_size, 1, fp);
-    fclose(fp);
-    str[*file_size] = '\0';
     return str;
 }
 float create_BST(char **str)
@@ -163,19 +149,30 @@ float create_BST(char **str)
 void main()
 {
     long file_size = 0;
-    char *str = get_in_buffer(&file_size);
-    if (str == NULL)
-        return;
-    // needed_trees(str);
+    char *str =NULL;
+    FILE *fp = fopen(input_file, "rb");
+    if (!fp)
+    {
+        printf("No file");
+        return ;
+    }
+    fseek(fp, 0L, SEEK_END);
+    file_size = ftell(fp);
+    fseek(fp, 0L, SEEK_SET);
+    str = malloc(sizeof(*str) * (file_size + 1));
+    fread(str, file_size, 1, fp);
+    fclose(fp);
+    str[file_size] = '\0';
     int j = 0;
     for (int i = 0; str[i] != '\0'; i++)
     {
         if (str[i] == '\n')
             j++;
     }
-    FILE *fp = fopen(output_file, "w");
+    fp = fopen(output_file, "w");
     for (j; j > 0; j--)
     {
         fprintf(fp, "%f\n", create_BST(&str));
     }
+
 }
