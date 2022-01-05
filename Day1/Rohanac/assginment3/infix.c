@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #define input_file "infix_input.txt"
 #define output_file "infix_output.txt"
-char *get_in_buffer(long *file_size)
-{
-    char *str = NULL;
-    return str;
-}
 float create_BST(char **str)
 {
     float operand[2] = {0};
