@@ -9,7 +9,7 @@ int main()
     float a = 0, b = 0, result = 0, c = 0;
     char operator= '0';
     fp = fopen("expressions.txt", "rb");
-    if(!fP)
+    if(!fp)
     {printf("no file");
      return 1;
     }
