@@ -151,7 +151,7 @@ static inline uint32_t interlocked_add(uint32_t volatile *addend, uint32_t value
 }
 
 static inline uint32_t interlocked_cmpxchg(uint32_t volatile *dst, uint32_t exchange, uint32_t comperand) {
-	return __sync_val_compare_and_swap(dst, exchange, comperand);
+	return __sync_val_compare_and_swap(dst, comperand, exchange);
 }
 #endif
 
