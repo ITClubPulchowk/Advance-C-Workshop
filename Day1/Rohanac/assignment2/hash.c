@@ -159,11 +159,7 @@ char *hash_table_add(char *key, char *value, hash_table **table, int ind)
 void print_hash_table(hash_table *table)
 {
     FILE *fp = fopen("airport_output.csv", "w");
-    for (int i = 0; i < table->size; i++)
-    {
-        if (table->item[i])
-            fprintf(fp,"%d,%s\n", table->item[i]->number_of_flights + 1, table->item[i]->value);
-    }
+    fprintf(fp,"%d,%s\n", table->item[0]->number_of_flights + 1, table->item[0]->value);
     fclose(fp);
 }
 void sort_table(hash_table **table)
