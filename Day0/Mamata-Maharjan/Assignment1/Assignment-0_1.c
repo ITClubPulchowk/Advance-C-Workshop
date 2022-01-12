@@ -25,7 +25,7 @@ void draw_rect(unsigned char* canvas, int si, int sj, int w, int h, uchar r, uch
     {
         for (int j = (si - w/2); j <= (si + w/2); j++)
         {
-            paint(canvas, i, j, r, g, b, image_width, image_height);
+            paint(canvas, j, i, r, g, b, image_width, image_height);
         }
     }
 }
