@@ -25,7 +25,7 @@ static inline int thrd_create(thrd_t *thr, thrd_start_t func, void *arg) {
 #if defined(__clang__) || defined(__ibmxl__)
 	*thr = CreateThread(NULL, 0, (void *)func, arg, 0, NULL);
 #else
-	*thr = CreateThread(NULL, 0, func, arg, 0, NULL);
+	*thr = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)func, arg, 0, NULL);
 #endif
 	if (*thr != INVALID_HANDLE_VALUE)
 		return thrd_success;
