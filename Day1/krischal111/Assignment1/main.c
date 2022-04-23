@@ -4,8 +4,8 @@
 
 int main()
 {
-    FILE * ifile = fopen(inputfilename,"r"),
-        * ofile = fopen(outputfilename,"w");
+    FILE * ifile = fopen(inputfilename,"rb"),
+        * ofile = fopen(outputfilename,"wb");
     
     int c = 0;
     for(int i=0; c!=EOF ; i++)
