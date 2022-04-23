@@ -5,7 +5,7 @@ int main()
 {
     char *buffer, ch;
 
-    int length, top = -1, i = 0, multiplier = 10;
+    int length, top = -1, i = 0, multiplier;
 
     float result, *stack, final, num, operand1, operand2;
 
@@ -66,6 +66,7 @@ int main()
 
                 else
                 {
+                    multiplier = 10;
                     num = buffer[i] - '0';
                     while ((buffer[i + 1] >= '0' && buffer[i + 1] <= '9'))
                     {
@@ -120,6 +121,4 @@ int main()
 
     free(buffer);
     free(stack);
-
-    return 0;
 }
